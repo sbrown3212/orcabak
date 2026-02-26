@@ -14,13 +14,11 @@ var cfgFile string
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "orcabak",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "An Orca Slicer specific git wrapper.",
+	Long: `Orcabak is a tool to aid in adding version control to you Orca slicer
+	configuration and various profiles by using Git. It also aids in pushing
+	these files to a GitHub repo. Essentially, it is an Orca Slicer aware git
+	wrapper.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },
