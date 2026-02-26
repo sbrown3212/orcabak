@@ -19,34 +19,27 @@ const (
 )
 
 func LoadAppConfig(cmd *cobra.Command, cfgFile string) error {
-	// WHEN CHECKING APP CONFIG PATH:
-	// First check for flags
-	// Second check for environment variables
-	// Third use default User Config Directory
-
 	// Set config file location through environment variable
 	viper.SetEnvPrefix(envVarPrefix)
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_", "-", "_"))
 	viper.AutomaticEnv()
 
+	cfgDir, err := os.UserConfigDir()
+	if err != nil {
+		return errors.New("UserConfigDirNotFound")
+	}
+
 	// Set config file location from command flags
 	if cfgFile != "" {
-		// Does this accept absolute, relative, or both file path types?
-		// Do I need to ensure that `cfgFile` can actually be parsed as a path?
 		viper.SetConfigFile(cfgFile)
 	} else {
-		cfgDir, err := os.UserConfigDir()
-		if err != nil {
-			return errors.New("UserConfigDirNotFound")
-		}
-
 		viper.AddConfigPath(filepath.Join(cfgDir, appCfgDirName))
 		viper.SetConfigName(appCfgFileName)
 		viper.SetConfigType(appCfgFileType)
 	}
 
 	// Read config
-	err := viper.ReadInConfig()
+	err = viper.ReadInConfig()
 	if err != nil {
 		var noConfigFileError viper.ConfigFileNotFoundError
 
@@ -57,13 +50,23 @@ func LoadAppConfig(cmd *cobra.Command, cfgFile string) error {
 
 		// Create config file when not found
 		if errors.As(err, &noConfigFileError) {
-			err := viper.SafeWriteConfig()
+			// err := viper.SafeWriteConfig()
+			err := os.Mkdir(filepath.Join(cfgDir, appCfgDirName), 0755)
+			if err != nil {
+				return fmt.Errorf("failed to create app config directory: %v", err)
+			}
+			err = viper.SafeWriteConfigAs(filepath.Join(cfgDir, appCfgDirName, appCfgFileName+"."+appCfgFileType))
 			if err != nil {
 				return fmt.Errorf("failed to initialize app config: %v", err)
 			}
-		}
 
+			err = viper.ReadInConfig()
+			if err != nil {
+				return fmt.Errorf("failed to read new config file: %v", err)
+			}
+		}
 	}
+	cmd.Printf("Configuration initialized. Using config file: %v\n", viper.ConfigFileUsed())
 	// TODO: verbose
 	return nil
 }
