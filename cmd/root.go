@@ -1,6 +1,5 @@
 /*
 Copyright © 2026 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
@@ -14,7 +13,7 @@ import (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "orca_bak",
+	Use:   "orcabak",
 	Short: "A brief description of your application",
 	Long: `A longer description that spans multiple lines and likely contains
 examples and usage of using your application. For example:
