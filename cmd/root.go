@@ -6,6 +6,7 @@ package cmd
 import (
 	"os"
 
+	"github.com/sbrown3212/orcabak/internal/app"
 	"github.com/spf13/cobra"
 )
 
@@ -19,9 +20,10 @@ var rootCmd = &cobra.Command{
 	configuration and various profiles by using Git. It also aids in pushing
 	these files to a GitHub repo. Essentially, it is an Orca Slicer aware git
 	wrapper.`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	// Run: func(cmd *cobra.Command, args []string) { },
+	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+		cmd.SetOut(os.Stdout)
+		return app.LoadAppConfig(cmd, cfgFile)
+	},
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
