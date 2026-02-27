@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/sbrown3212/orcabak/internal/verbose"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -24,7 +25,7 @@ func LoadAppConfig(cmd *cobra.Command, cfgFile string) error {
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_", "-", "_"))
 	viper.AutomaticEnv()
 
-	cfgDir, err := os.UserConfigDir()
+	userCFGDir, err := os.UserConfigDir()
 	if err != nil {
 		return errors.New("UserConfigDirNotFound")
 	}
@@ -33,7 +34,7 @@ func LoadAppConfig(cmd *cobra.Command, cfgFile string) error {
 	if cfgFile != "" {
 		viper.SetConfigFile(cfgFile)
 	} else {
-		viper.AddConfigPath(filepath.Join(cfgDir, appCfgDirName))
+		viper.AddConfigPath(filepath.Join(userCFGDir, appCfgDirName))
 		viper.SetConfigName(appCfgFileName)
 		viper.SetConfigType(appCfgFileType)
 	}
@@ -50,15 +51,30 @@ func LoadAppConfig(cmd *cobra.Command, cfgFile string) error {
 
 		// Create config file when not found
 		if errors.As(err, &noConfigFileError) {
-			// err := viper.SafeWriteConfig()
-			err := os.Mkdir(filepath.Join(cfgDir, appCfgDirName), 0755)
+			appCFGDirPath := filepath.Join(userCFGDir, appCfgDirName)
+			appCFGFile := appCfgFileName + "." + appCfgFileType
+			appCFGFilePath := filepath.Join(appCFGDirPath, appCFGFile)
+
+			// Create app config dir if not exist
+			_, err := os.Stat(appCFGDirPath)
 			if err != nil {
-				return fmt.Errorf("failed to create app config directory: %v", err)
+				if os.IsNotExist(err) {
+					verbose.Verbosef("App config dir does not yet exist. Creating dir now...\n")
+
+					err := os.Mkdir(appCFGDirPath, 0755)
+					if err != nil {
+						verbose.Verbosef("Failed to create app config dir.")
+						return fmt.Errorf("failed to create app config directory: %v", err)
+					}
+					verbose.Verbosef("App config dir created successfully. path: %v\n", appCFGDirPath)
+				}
 			}
-			err = viper.SafeWriteConfigAs(filepath.Join(cfgDir, appCfgDirName, appCfgFileName+"."+appCfgFileType))
+			// err := viper.SafeWriteConfig()
+			err = viper.SafeWriteConfigAs(appCFGFilePath)
 			if err != nil {
 				return fmt.Errorf("failed to initialize app config: %v", err)
 			}
+			verbose.Verbosef("Successfully created app config file at path: %v\n", appCFGFilePath)
 
 			err = viper.ReadInConfig()
 			if err != nil {
@@ -66,7 +82,7 @@ func LoadAppConfig(cmd *cobra.Command, cfgFile string) error {
 			}
 		}
 	}
-	cmd.Printf("Configuration initialized. Using config file: %v\n", viper.ConfigFileUsed())
-	// TODO: verbose
+	verbose.Verbosef("Configuration initialized. Using config file: %v\n", viper.ConfigFileUsed())
+
 	return nil
 }
