@@ -23,13 +23,15 @@ type BranchInfo struct {
 }
 
 type FileStatus struct {
-	Path string
-	Type *StatusType
+	Path     string
+	OrigPath string
+	Type     StatusType
 }
 
 type StatusType string
 
 const (
+	StatusNone       StatusType = ""
 	StatusModified   StatusType = "modified"
 	StatusAdded      StatusType = "added"
 	StatusDeleted    StatusType = "deleted"

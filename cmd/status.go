@@ -24,8 +24,12 @@ var statusCmd = &cobra.Command{
 		userCFGDir, _ := os.UserConfigDir()
 
 		gitClient := git.NewGitCLIclient(filepath.Join(userCFGDir, "OrcaSlicer"))
-		err := gitClient.Status()
+		output, err := gitClient.Status()
 		cobra.CheckErr(err)
+
+		// fmt.Println("Git status output:")
+		// fmt.Println("- Branch:", output.Branch.Name)
+		fmt.Printf("%+v", output)
 	},
 }
 
