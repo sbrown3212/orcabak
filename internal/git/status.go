@@ -7,6 +7,37 @@ import (
 	"os/exec"
 )
 
+type GitStatus struct {
+	Branch    BranchInfo
+	Staged    []FileStatus
+	Unstaged  []FileStatus
+	Untracked []string
+	Conflicts []string
+}
+
+type BranchInfo struct {
+	Name     string
+	Upstream string
+	Ahead    int
+	Behind   int
+}
+
+type FileStatus struct {
+	Path string
+	Type *StatusType
+}
+
+type StatusType string
+
+const (
+	StatusModified   StatusType = "modified"
+	StatusAdded      StatusType = "added"
+	StatusDeleted    StatusType = "deleted"
+	StatusRenamed    StatusType = "renamed"
+	StatusCopied     StatusType = "copied"
+	StatusTypeChange StatusType = "type_change"
+)
+
 var ErrNotGitRepo = errors.New("not a git repository")
 
 func (g *GitCLIClient) Status() (GitStatus, error) {
