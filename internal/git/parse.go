@@ -10,10 +10,10 @@ import (
 )
 
 var (
-	ErrUnexpectedFormatGitStatusOutput = errors.New("unexpected format for git status output")
 	ErrInvalidGitStatusRenameLine      = errors.New("invalid git status rename line")
 	ErrIncorrectAmountOfPartsToLine    = errors.New("incorrect amount of parts to line")
 	ErrRenameSplitPaths                = errors.New("unable to split rename paths")
+	ErrUnrecognizedGitStatusLinePrefix = errors.New("prefix not recognized for git status ouput")
 )
 
 func parseGitStatus(data []byte) (GitStatus, error) {
@@ -54,7 +54,7 @@ func parseGitStatus(data []byte) (GitStatus, error) {
 			}
 
 		default:
-			return GitStatus{}, ErrUnexpectedFormatGitStatusOutput
+			return GitStatus{}, ErrUnrecognizedGitStatusLinePrefix
 		}
 	}
 
@@ -154,7 +154,7 @@ func parseRenameLine(line []byte, g *GitStatus) error {
 
 	newPath := parts[9]
 
-	statusType := getStatusType(line[0])
+	statusType := getStatusType(line[2])
 
 	g.Staged = append(g.Staged, FileStatus{
 		Path:     string(newPath),
@@ -167,11 +167,11 @@ func parseRenameLine(line []byte, g *GitStatus) error {
 
 func parseConflicts(line []byte, g *GitStatus) error {
 	parts := bytes.Split(line, []byte(" "))
-	if len(parts) != 10 {
+	if len(parts) != 11 {
 		return ErrIncorrectAmountOfPartsToLine
 	}
 
-	path := parts[9]
+	path := parts[10]
 
 	g.Conflicts = append(g.Conflicts, string(path))
 

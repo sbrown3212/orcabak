@@ -16,38 +16,39 @@ type testCase struct {
 	wantErr  bool
 }
 
-// TODO: create cases for:
-// - [ ]
-// - [x] clean repository
-// - [x] untracked file
-// - [ ] modified_index file
-// - [x] modified_worktree file
-// - [ ] added file
-// - [ ] deleted file
-// - [ ] renamed file
-// - [ ] conflict
-// - [ ] staged and modified
-
-// TODO: create cases for: (optionally)
-// - [ ] branch ahead
-// - [ ] branch behinc
-// - [ ] branch ahead and behind
-
 func TestParseGitStatus(t *testing.T) {
 	cases := map[string]testCase{
+		"clean": {
+			input: "clean.txt",
+			expected: GitStatus{
+				Branch: BranchInfo{
+					Name: "main",
+				},
+			},
+			wantErr: false,
+		},
 		"untracked": {
 			input: "untracked.txt",
 			expected: GitStatus{
 				Branch: BranchInfo{
 					Name: "main",
 				},
-				// Untracked: ["hello.txt"],
 				Untracked: []string{"hello.txt"},
 			},
 			wantErr: false,
 		},
+		"modified_index": {
+			input: "modified_index.txt",
+			expected: GitStatus{
+				Branch: BranchInfo{
+					Name: "main",
+				},
+				Staged: []FileStatus{fs("second.txt", "", StatusModified)},
+			},
+			wantErr: false,
+		},
 		"modified_worktree": {
-			input: "modified.txt",
+			input: "modified_worktree.txt",
 			expected: GitStatus{
 				Branch: BranchInfo{
 					Name: "main",
@@ -55,6 +56,86 @@ func TestParseGitStatus(t *testing.T) {
 				Unstaged: []FileStatus{fs("hello.txt", "", StatusModified)},
 			},
 			wantErr: false,
+		},
+		"modified_index_and_worktree": {
+			input: "modified_index_and_worktree.txt",
+			expected: GitStatus{
+				Branch: BranchInfo{
+					Name: "main",
+				},
+				Staged:   []FileStatus{fs("second.txt", "", StatusModified)},
+				Unstaged: []FileStatus{fs("second.txt", "", StatusModified)},
+			},
+			wantErr: false,
+		},
+		"added": {
+			input: "added.txt",
+			expected: GitStatus{
+				Branch: BranchInfo{
+					Name: "main",
+				},
+				Staged: []FileStatus{fs("fourth.txt", "", StatusAdded)},
+			},
+			wantErr: false,
+		},
+		"deleted_worktree": {
+			input: "deleted_worktree.txt",
+			expected: GitStatus{
+				Branch: BranchInfo{
+					Name: "main",
+				},
+				Unstaged: []FileStatus{fs("fourth.txt", "", StatusDeleted)},
+			},
+			wantErr: false,
+		},
+		"deleted_index": {
+			input: "deleted_index.txt",
+			expected: GitStatus{
+				Branch: BranchInfo{
+					Name: "main",
+				},
+				Staged: []FileStatus{fs("fourth.txt", "", StatusDeleted)},
+			},
+			wantErr: false,
+		},
+		"renamed": {
+			input: "renamed.txt",
+			expected: GitStatus{
+				Branch: BranchInfo{
+					Name: "main",
+				},
+				Staged: []FileStatus{fs("hello_world.txt", "hello.txt", StatusRenamed)},
+			},
+			wantErr: false,
+		},
+		"conflict": {
+			input: "conflict.txt",
+			expected: GitStatus{
+				Branch: BranchInfo{
+					Name: "main",
+				},
+				Conflicts: []string{"hello.txt"},
+			},
+			wantErr: false,
+		},
+		"multiline": {
+			input: "multiline.txt",
+			expected: GitStatus{
+				Branch: BranchInfo{
+					Name: "main",
+				},
+				Staged: []FileStatus{
+					fs("hello_world.txt", "hello.txt", StatusRenamed),
+					fs("second.txt", "", StatusAdded),
+				},
+				Untracked: []string{"third.txt"},
+			},
+			wantErr: false,
+		},
+		"prefix_error": {
+			input:    "prefix_error.txt",
+			expected: GitStatus{},
+			wantErr:  true,
 		},
 	}
 
