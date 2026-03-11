@@ -150,8 +150,8 @@ func TestParseGitStatus(t *testing.T) {
 
 			// parse input file
 			output, err := parseGitStatus(dat)
-			if err != nil {
-				t.Fatalf("test: %v - git status parse failed: %v", name, err)
+			if (err != nil) != tc.wantErr {
+				t.Errorf("git parse error: %v, wantErr: %v", err, tc.wantErr)
 			}
 
 			// compare parsed output with expected output

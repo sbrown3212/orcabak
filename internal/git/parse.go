@@ -22,6 +22,10 @@ func parseGitStatus(data []byte) (GitStatus, error) {
 	for scanner.Scan() {
 		line := scanner.Bytes()
 
+		if len(line) == 0 {
+			continue
+		}
+
 		switch line[0] {
 		case '#': // Parse Branch lines
 			err := parseBranch(line, &result)
@@ -109,7 +113,7 @@ func getStatusType(char byte) StatusType {
 }
 
 func parseOrdinaryTracked(line []byte, g *GitStatus) error {
-	parts := bytes.Split(line, []byte(" "))
+	parts := bytes.SplitN(line, []byte(" "), 9)
 	if len(parts) != 9 {
 		return ErrIncorrectAmountOfPartsToLine
 	}
@@ -137,9 +141,9 @@ func parseOrdinaryTracked(line []byte, g *GitStatus) error {
 }
 
 func parseRenameLine(line []byte, g *GitStatus) error {
+	// Rename and Copied output has a tab separating new path and original path
 	// First, split by tab
 	tabSplitParts := bytes.SplitN(line, []byte("\t"), 2)
-
 	if len(tabSplitParts) != 2 {
 		return ErrRenameSplitPaths
 	}
@@ -147,7 +151,7 @@ func parseRenameLine(line []byte, g *GitStatus) error {
 	left := tabSplitParts[0]
 
 	// Second, split by space
-	parts := bytes.Split(left, []byte(" "))
+	parts := bytes.SplitN(left, []byte(" "), 10)
 	if len(parts) < 10 {
 		return ErrIncorrectAmountOfPartsToLine
 	}
@@ -166,7 +170,7 @@ func parseRenameLine(line []byte, g *GitStatus) error {
 }
 
 func parseConflicts(line []byte, g *GitStatus) error {
-	parts := bytes.Split(line, []byte(" "))
+	parts := bytes.SplitN(line, []byte(" "), 11)
 	if len(parts) != 11 {
 		return ErrIncorrectAmountOfPartsToLine
 	}
@@ -179,7 +183,7 @@ func parseConflicts(line []byte, g *GitStatus) error {
 }
 
 func parseUntracked(line []byte, g *GitStatus) error {
-	parts := bytes.Split(line, []byte(" "))
+	parts := bytes.SplitN(line, []byte(" "), 2)
 	if len(parts) != 2 {
 		return ErrIncorrectAmountOfPartsToLine
 	}
