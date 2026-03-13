@@ -5,11 +5,12 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/sbrown3212/orcabak/internal/app"
 	"github.com/sbrown3212/orcabak/internal/git"
 	"github.com/spf13/cobra"
 )
 
-func NewStatusCmd() *cobra.Command {
+func NewStatusCmd(state *app.State) *cobra.Command {
 	statusCmd := &cobra.Command{
 		Use:   "status",
 		Short: "View status of Orca Slicer profiles",

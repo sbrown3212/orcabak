@@ -7,10 +7,13 @@ import (
 	"os"
 
 	"github.com/sbrown3212/orcabak/cmd"
+	"github.com/sbrown3212/orcabak/internal/app"
 )
 
 func main() {
-	rootCmd := cmd.NewRootCmd()
+	state := &app.State{}
+
+	rootCmd := cmd.NewRootCmd(state)
 
 	if err := rootCmd.Execute(); err != nil {
 		os.Exit(1)

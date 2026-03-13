@@ -10,7 +10,7 @@ import (
 
 var cfgFile string
 
-func NewRootCmd() *cobra.Command {
+func NewRootCmd(state *app.State) *cobra.Command {
 	rootCmd := &cobra.Command{
 		Use:   "orcabak",
 		Short: "An Orca Slicer specific git wrapper.",
@@ -27,7 +27,7 @@ wrapper.`,
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.orca_bak.yaml)")
 	rootCmd.PersistentFlags().BoolVarP(&verbose.Enabled, "verbose", "v", false, "enable verbose output")
 
-	rootCmd.AddCommand(NewStatusCmd())
+	rootCmd.AddCommand(NewStatusCmd(state))
 
 	return rootCmd
 }
