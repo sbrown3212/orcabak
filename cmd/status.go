@@ -21,11 +21,12 @@ func NewStatusCmd(state *app.State) *cobra.Command {
 			// TODO: Create `slicerConfigLocator()` function in app package
 			userCFGDir, _ := os.UserConfigDir()
 
-			gitClient := git.NewGitCLIclient(filepath.Join(userCFGDir, "OrcaSlicer"))
+			gitClient := git.NewGitCLIclient(filepath.Join(userCFGDir, "OrcaSlicer-test", "user", "default"))
 			output, err := gitClient.Status()
 			cobra.CheckErr(err)
 
-			fmt.Printf("%+v", output)
+			fmt.Printf("%+v\n", output)
+			state.Printer.PrintStatus(output)
 		},
 	}
 
