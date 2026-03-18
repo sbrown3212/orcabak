@@ -1,50 +1,35 @@
-/*
-Copyright © 2026 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
 	"os"
 
 	"github.com/sbrown3212/orcabak/internal/app"
+	"github.com/sbrown3212/orcabak/internal/printer"
 	"github.com/sbrown3212/orcabak/internal/verbose"
 	"github.com/spf13/cobra"
 )
 
 var cfgFile string
 
-// rootCmd represents the base command when called without any subcommands
-var rootCmd = &cobra.Command{
-	Use:   "orcabak",
-	Short: "An Orca Slicer specific git wrapper.",
-	Long: `Orcabak is a tool to aid in adding version control to you Orca slicer
-	configuration and various profiles by using Git. It also aids in pushing
-	these files to a GitHub repo. Essentially, it is an Orca Slicer aware git
-	wrapper.`,
-	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-		cmd.SetOut(os.Stdout)
-		return app.LoadAppConfig(cmd, cfgFile)
-	},
-}
+func NewRootCmd(state *app.State) *cobra.Command {
+	rootCmd := &cobra.Command{
+		Use:   "orcabak",
+		Short: "An Orca Slicer specific git wrapper.",
+		Long: `Orcabak is a tool to aid in adding version control to you Orca slicer
+configuration and various profiles by using Git. It also aids in pushing
+these files to a GitHub repo. Essentially, it is an Orca Slicer aware git
+wrapper.`,
+		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+			state.Printer = printer.NewPrinter(os.Stdout)
 
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
-func Execute() {
-	err := rootCmd.Execute()
-	if err != nil {
-		os.Exit(1)
+			return app.LoadAppConfig(cmd, cfgFile)
+		},
 	}
-}
-
-func init() {
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.orca_bak.yaml)")
 	rootCmd.PersistentFlags().BoolVarP(&verbose.Enabled, "verbose", "v", false, "enable verbose output")
 
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	rootCmd.AddCommand(NewStatusCmd(state))
+
+	return rootCmd
 }

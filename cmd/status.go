@@ -1,6 +1,3 @@
-/*
-Copyright © 2026 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
@@ -8,33 +5,56 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/sbrown3212/orcabak/internal/app"
 	"github.com/sbrown3212/orcabak/internal/git"
 	"github.com/spf13/cobra"
 )
 
-// statusCmd represents the status command
-var statusCmd = &cobra.Command{
-	Use:   "status",
-	Short: "View status of Orca Slicer profiles",
-	// Long: ``,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("status called")
+func NewStatusCmd(state *app.State) *cobra.Command {
+	statusCmd := &cobra.Command{
+		Use:   "status",
+		Short: "View status of Orca Slicer profiles",
+		// Long: ``,
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Println("status called")
 
-		// TODO: Create `slicerConfigLocator()` function in app package
-		userCFGDir, _ := os.UserConfigDir()
+			// TODO: Create `slicerConfigLocator()` function in app package
+			userCFGDir, _ := os.UserConfigDir()
 
-		gitClient := git.NewGitCLIclient(filepath.Join(userCFGDir, "OrcaSlicer"))
-		output, err := gitClient.Status()
-		cobra.CheckErr(err)
+			gitClient := git.NewGitCLIclient(filepath.Join(userCFGDir, "OrcaSlicer-test", "user", "default"))
+			output, err := gitClient.Status()
+			cobra.CheckErr(err)
 
-		// fmt.Println("Git status output:")
-		// fmt.Println("- Branch:", output.Branch.Name)
-		fmt.Printf("%+v", output)
-	},
+			fmt.Printf("%+v\n", output)
+			state.Printer.PrintStatus(output)
+		},
+	}
+
+	return statusCmd
 }
 
+// var statusCmd = &cobra.Command{
+// 	Use:   "status",
+// 	Short: "View status of Orca Slicer profiles",
+// 	// Long: ``,
+// 	Run: func(cmd *cobra.Command, args []string) {
+// 		fmt.Println("status called")
+//
+// 		// TODO: Create `slicerConfigLocator()` function in app package
+// 		userCFGDir, _ := os.UserConfigDir()
+//
+// 		gitClient := git.NewGitCLIclient(filepath.Join(userCFGDir, "OrcaSlicer"))
+// 		output, err := gitClient.Status()
+// 		cobra.CheckErr(err)
+//
+// 		// fmt.Println("Git status output:")
+// 		// fmt.Println("- Branch:", output.Branch.Name)
+// 		fmt.Printf("%+v", output)
+// 	},
+// }
+
 func init() {
-	rootCmd.AddCommand(statusCmd)
+	// rootCmd.AddCommand(statusCmd)
 
 	// Here you will define your flags and configuration settings.
 

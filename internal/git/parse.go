@@ -12,6 +12,7 @@ import (
 var (
 	ErrInvalidGitStatusRenameLine      = errors.New("invalid git status rename line")
 	ErrIncorrectAmountOfPartsToLine    = errors.New("incorrect amount of parts to line")
+	ErrNoOrigPath                      = errors.New("renamed or copied FileStatus is missing OrigPath")
 	ErrRenameSplitPaths                = errors.New("unable to split rename paths")
 	ErrUnrecognizedGitStatusLinePrefix = errors.New("prefix not recognized for git status ouput")
 )
@@ -40,7 +41,7 @@ func parseGitStatus(data []byte) (GitStatus, error) {
 			}
 
 		case '2': // Renamed or copied lines
-			err := parseRenameLine(line, &result)
+			err := parseRenamedCopiedLine(line, &result)
 			if err != nil {
 				return GitStatus{}, fmt.Errorf("error parsing renamed file line: %w", err)
 			}
@@ -140,7 +141,7 @@ func parseOrdinaryTracked(line []byte, g *GitStatus) error {
 	return nil
 }
 
-func parseRenameLine(line []byte, g *GitStatus) error {
+func parseRenamedCopiedLine(line []byte, g *GitStatus) error {
 	// Rename and Copied output has a tab separating new path and original path
 	// First, split by tab
 	tabSplitParts := bytes.SplitN(line, []byte("\t"), 2)
@@ -160,11 +161,17 @@ func parseRenameLine(line []byte, g *GitStatus) error {
 
 	statusType := getStatusType(line[2])
 
-	g.Staged = append(g.Staged, FileStatus{
+	newFileStatus := FileStatus{
 		Path:     string(newPath),
 		OrigPath: string(origPath),
 		Type:     statusType,
-	})
+	}
+
+	if newFileStatus.OrigPath == "" {
+		return ErrNoOrigPath
+	}
+
+	g.Staged = append(g.Staged, newFileStatus)
 
 	return nil
 }
