@@ -26,7 +26,18 @@ wrapper.`,
 		},
 	}
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.orca_bak.yaml)")
+	rootCmd.PersistentFlags().StringVar(
+		&state.AppCfgLocation,
+		"config-path",
+		"",
+		"config file (default is $HOME/.orca_bak.yaml)",
+	)
+	rootCmd.PersistentFlags().StringVar(
+		&state.SlicerCfgLocation,
+		"slicer-path",
+		"",
+		"path to 'OrcaSlicer' app directory (OS specific)",
+	)
 	rootCmd.PersistentFlags().BoolVarP(&verbose.Enabled, "verbose", "v", false, "enable verbose output")
 
 	rootCmd.AddCommand(NewStatusCmd(state))
