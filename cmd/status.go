@@ -1,12 +1,7 @@
 package cmd
 
 import (
-	"fmt"
-	"os"
-	"path/filepath"
-
 	"github.com/sbrown3212/orcabak/internal/app"
-	"github.com/sbrown3212/orcabak/internal/git"
 	"github.com/spf13/cobra"
 )
 
@@ -15,18 +10,14 @@ func NewStatusCmd(state *app.State) *cobra.Command {
 		Use:   "status",
 		Short: "View status of Orca Slicer profiles",
 		// Long: ``,
-		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("status called")
-
-			// TODO: Create `slicerConfigLocator()` function in app package
-			userCFGDir, _ := os.UserConfigDir()
-
-			gitClient := git.NewGitCLIclient(filepath.Join(userCFGDir, "OrcaSlicer-test", "user", "default"))
-			output, err := gitClient.Status()
+		RunE: func(cmd *cobra.Command, args []string) error {
+			output, err := state.Git.Status(state.SlicerCfgLocation)
 			cobra.CheckErr(err)
 
-			fmt.Printf("%+v\n", output)
+			// fmt.Printf("%+v\n", output)
 			state.Printer.PrintStatus(output)
+
+			return nil
 		},
 	}
 

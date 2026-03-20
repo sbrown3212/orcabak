@@ -42,8 +42,8 @@ const (
 
 var ErrNotGitRepo = errors.New("not a git repository")
 
-func (g *GitCLIClient) Status() (GitStatus, error) {
-	output, err := g.Runner.Run(g.RepoDir, "git", "status", "--porcelain=v2", "--branch")
+func (g *GitCLIClient) Status(repoDir string) (GitStatus, error) {
+	output, err := g.Runner.Run(repoDir, "git", "status", "--porcelain=v2", "--branch")
 	// Return early if no error
 	if err == nil {
 		return parseGitStatus(output)
