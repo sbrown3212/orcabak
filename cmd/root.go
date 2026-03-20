@@ -1,9 +1,12 @@
 package cmd
 
 import (
+	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/sbrown3212/orcabak/internal/app"
+	"github.com/sbrown3212/orcabak/internal/git"
 	"github.com/sbrown3212/orcabak/internal/printer"
 	"github.com/sbrown3212/orcabak/internal/verbose"
 	"github.com/spf13/cobra"
@@ -21,12 +24,35 @@ these files to a GitHub repo. Essentially, it is an Orca Slicer aware git
 wrapper.`,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			state.Printer = printer.NewPrinter(os.Stdout)
+			state.Git = git.NewGitCLIclient()
+			usrCfgDir, _ := os.UserConfigDir()
+
+			if state.SlicerCfgLocation == "" {
+				state.SlicerCfgLocation = filepath.Join(
+					usrCfgDir, "OrcaSlicer-test", "user", "default",
+				)
+			} else {
+				state.SlicerCfgLocation = filepath.Clean(state.SlicerCfgLocation)
+			}
+
+			fmt.Println("Slicer config path set to:", state.SlicerCfgLocation)
 
 			return app.LoadAppConfig(cmd, cfgFile)
 		},
 	}
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.orca_bak.yaml)")
+	rootCmd.PersistentFlags().StringVar(
+		&state.AppCfgLocation,
+		"config-path",
+		"",
+		"config file (default is $HOME/.orca_bak.yaml)",
+	)
+	rootCmd.PersistentFlags().StringVar(
+		&state.SlicerCfgLocation,
+		"slicer-path",
+		"",
+		"path to 'OrcaSlicer' app directory (OS specific)",
+	)
 	rootCmd.PersistentFlags().BoolVarP(&verbose.Enabled, "verbose", "v", false, "enable verbose output")
 
 	rootCmd.AddCommand(NewStatusCmd(state))
