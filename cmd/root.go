@@ -56,6 +56,7 @@ wrapper.`,
 	rootCmd.PersistentFlags().BoolVarP(&verbose.Enabled, "verbose", "v", false, "enable verbose output")
 
 	rootCmd.AddCommand(NewStatusCmd(state))
+	rootCmd.AddCommand(NewAddCmd(state))
 
 	return rootCmd
 }
