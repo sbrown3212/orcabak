@@ -6,8 +6,6 @@ import (
 	"path/filepath"
 
 	"github.com/sbrown3212/orcabak/internal/app"
-	"github.com/sbrown3212/orcabak/internal/git"
-	"github.com/sbrown3212/orcabak/internal/printer"
 	"github.com/sbrown3212/orcabak/internal/verbose"
 	"github.com/spf13/cobra"
 )
@@ -23,8 +21,6 @@ configuration and various profiles by using Git. It also aids in pushing
 these files to a GitHub repo. Essentially, it is an Orca Slicer aware git
 wrapper.`,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-			state.Printer = printer.NewPrinter(os.Stdout)
-			state.Git = git.NewGitCLIclient()
 			usrCfgDir, _ := os.UserConfigDir()
 
 			if state.SlicerCfgLocation == "" {
