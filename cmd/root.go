@@ -6,7 +6,6 @@ import (
 	"path/filepath"
 
 	"github.com/sbrown3212/orcabak/internal/app"
-	"github.com/sbrown3212/orcabak/internal/verbose"
 	"github.com/spf13/cobra"
 )
 
@@ -49,7 +48,9 @@ wrapper.`,
 		"",
 		"path to 'OrcaSlicer' app directory (OS specific)",
 	)
-	rootCmd.PersistentFlags().BoolVarP(&verbose.Enabled, "verbose", "v", false, "enable verbose output")
+	rootCmd.PersistentFlags().BoolVarP(
+		&state.Printer.Verbose, "verbose", "v", false, "enable verbose output",
+	)
 
 	rootCmd.AddCommand(NewStatusCmd(state))
 	rootCmd.AddCommand(NewAddCmd(state))
