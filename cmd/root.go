@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 
@@ -30,9 +29,9 @@ wrapper.`,
 				state.SlicerCfgLocation = filepath.Clean(state.SlicerCfgLocation)
 			}
 
-			fmt.Println("Slicer config path set to:", state.SlicerCfgLocation)
+			state.Printer.Verbosef("Slicer config path: %s\n", state.SlicerCfgLocation)
 
-			return app.LoadAppConfig(cmd, cfgFile)
+			return app.LoadAppConfig(cmd, cfgFile, state.Printer)
 		},
 	}
 

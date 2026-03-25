@@ -1,16 +1,12 @@
 package printer
 
 import (
-	"fmt"
-
 	"github.com/sbrown3212/orcabak/internal/git"
 )
 
 func (p *Printer) PrintStatus(status git.GitStatus) error {
 	if status.Branch.Name != "" {
-		if _, err := fmt.Fprintln(p.Out, "On branch:", status.Branch.Name); err != nil {
-			return err
-		}
+		p.Println("On branch:", status.Branch.Name)
 	}
 
 	if err := p.printFileSection("Staged", status.Staged); err != nil {
@@ -34,25 +30,16 @@ func (p *Printer) PrintStatus(status git.GitStatus) error {
 
 func (p *Printer) printFileStatus(fs git.FileStatus) error {
 	if fs.OrigPath != "" {
-		_, err := fmt.Fprintf(p.Out, "    %s: %s -> %s\n", fs.Type, fs.OrigPath, fs.Path)
-		if err != nil {
-			return err
-		}
+		p.Printf("    %s: %s -> %s\n", fs.Type, fs.OrigPath, fs.Path)
 	} else {
-		_, err := fmt.Fprintf(p.Out, "    %s: %s\n", fs.Type, fs.Path)
-		if err != nil {
-			return err
-		}
+		p.Printf("    %s: %s\n", fs.Type, fs.Path)
 	}
 
 	return nil
 }
 
 func (p *Printer) printNewLine() error {
-	_, err := fmt.Fprintln(p.Out)
-	if err != nil {
-		return err
-	}
+	p.Println()
 
 	return nil
 }
@@ -62,9 +49,7 @@ func (p *Printer) printFileSection(title string, files []git.FileStatus) error {
 		return nil
 	}
 
-	if _, err := fmt.Fprintln(p.Out, title, ":"); err != nil {
-		return err
-	}
+	p.Println(title + ":")
 
 	for _, fs := range files {
 		if err := p.printFileStatus(fs); err != nil {
@@ -80,14 +65,10 @@ func (p *Printer) printStringSection(title string, strings []string) error {
 		return nil
 	}
 
-	if _, err := fmt.Fprintln(p.Out, title, ":"); err != nil {
-		return err
-	}
+	p.Println(title + ":")
 
 	for _, str := range strings {
-		if _, err := fmt.Fprintln(p.Out, "    ", str); err != nil {
-			return err
-		}
+		p.Println("    ", str)
 	}
 
 	return p.printNewLine()

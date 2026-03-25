@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/sbrown3212/orcabak/internal/app"
 	"github.com/spf13/cobra"
 )
@@ -18,7 +16,7 @@ func NewAddCmd(state *app.State) *cobra.Command {
 				return err
 			}
 
-			fmt.Println("Add successful")
+			state.Printer.Verboseln("Add successful!")
 			return nil
 		},
 	}
