@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/sbrown3212/orcabak/internal/verbose"
+	"github.com/sbrown3212/orcabak/internal/printer"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -19,7 +19,7 @@ const (
 	appCfgFileType = "json"
 )
 
-func LoadAppConfig(cmd *cobra.Command, cfgFile string) error {
+func LoadAppConfig(cmd *cobra.Command, cfgFile string, p *printer.Printer) error {
 	// Set config file location through environment variable
 	viper.SetEnvPrefix(envVarPrefix)
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_", "-", "_"))
@@ -59,14 +59,14 @@ func LoadAppConfig(cmd *cobra.Command, cfgFile string) error {
 			_, err := os.Stat(appCFGDirPath)
 			if err != nil {
 				if os.IsNotExist(err) {
-					verbose.Verbosef("App config dir does not yet exist. Creating dir now...\n")
+					p.Verboseln("App config dir does not yet exist. Creating dir now...")
 
 					err := os.Mkdir(appCFGDirPath, 0755)
 					if err != nil {
-						verbose.Verbosef("Failed to create app config dir.")
+						p.Verboseln("Failed to create app config dir.")
 						return fmt.Errorf("failed to create app config directory: %v", err)
 					}
-					verbose.Verbosef("App config dir created successfully. path: %v\n", appCFGDirPath)
+					p.Verbosef("App config dir created successfully. path: %v\n", appCFGDirPath)
 				}
 			}
 			// err := viper.SafeWriteConfig()
@@ -74,7 +74,7 @@ func LoadAppConfig(cmd *cobra.Command, cfgFile string) error {
 			if err != nil {
 				return fmt.Errorf("failed to initialize app config: %v", err)
 			}
-			verbose.Verbosef("Successfully created app config file at path: %v\n", appCFGFilePath)
+			p.Verbosef("Successfully created app config file at path: %v\n", appCFGFilePath)
 
 			err = viper.ReadInConfig()
 			if err != nil {
@@ -82,7 +82,7 @@ func LoadAppConfig(cmd *cobra.Command, cfgFile string) error {
 			}
 		}
 	}
-	verbose.Verbosef("Configuration initialized. Using config file: %v\n", viper.ConfigFileUsed())
+	p.Verbosef("Configuration initialized. Using config file: %v\n", viper.ConfigFileUsed())
 
 	return nil
 }

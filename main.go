@@ -8,10 +8,17 @@ import (
 
 	"github.com/sbrown3212/orcabak/cmd"
 	"github.com/sbrown3212/orcabak/internal/app"
+	"github.com/sbrown3212/orcabak/internal/git"
+	"github.com/sbrown3212/orcabak/internal/printer"
 )
 
 func main() {
-	state := &app.State{}
+	printer := printer.NewPrinter(os.Stdout, os.Stderr)
+	git := git.NewGitCLIclient()
+	state := &app.State{
+		Printer: printer,
+		Git:     git,
+	}
 
 	rootCmd := cmd.NewRootCmd(state)
 
