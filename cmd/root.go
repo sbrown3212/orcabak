@@ -53,6 +53,7 @@ wrapper.`,
 
 	rootCmd.AddCommand(NewStatusCmd(state))
 	rootCmd.AddCommand(NewAddCmd(state))
+	rootCmd.AddCommand(NewCommitCmd(state))
 
 	return rootCmd
 }
