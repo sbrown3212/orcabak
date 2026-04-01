@@ -38,8 +38,8 @@ wrapper.`,
 		"config file (default is $HOME/.orca_bak.yaml)",
 	)
 	rootCmd.PersistentFlags().StringVar(
-		&state.SlicerCfgLocation,
-		"slicer-path",
+		&state.Config.SlicerCfgLocation,
+		"orca-cfg-path",
 		"",
 		"path to 'OrcaSlicer' app directory (OS specific)",
 	)

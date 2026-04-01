@@ -13,7 +13,7 @@ func NewAddCmd(state *app.State) *cobra.Command {
 		Args:              cobra.MinimumNArgs(1),
 		ValidArgsFunction: completion.NewAddFileCompletion(state),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			err := state.Git.Add(state.SlicerCfgLocation, args...)
+			err := state.Git.Add(state.Config.SlicerCfgLocation, args...)
 			if err != nil {
 				return err
 			}

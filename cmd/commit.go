@@ -21,7 +21,7 @@ func NewCommitCmd(state *app.State) *cobra.Command {
 		Short: "Commit staged files",
 		Args:  cobra.MinimumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			commitOutput, err := state.Git.Commit(state.SlicerCfgLocation, args...)
+			commitOutput, err := state.Git.Commit(state.Config.SlicerCfgLocation, args...)
 			if err != nil {
 				if strings.Contains(commitOutput, worktreeCeanCommitFailure) {
 					state.Printer.Println("Nothing to commit")
