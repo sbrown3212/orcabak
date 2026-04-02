@@ -33,7 +33,7 @@ wrapper.`,
 		&state.AppCfgLocation,
 		"config-path",
 		"",
-		"config file (default is $HOME/.orca_bak.yaml)",
+		"config file (default is orcabak/config.json in your OS's app config directory)",
 	)
 	rootCmd.PersistentFlags().StringVar(
 		&state.Config.OrcaCfgPath,
