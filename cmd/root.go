@@ -5,8 +5,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var cfgFile string
-
 func NewRootCmd(state *app.State) *cobra.Command {
 	rootCmd := &cobra.Command{
 		Use:   "orcabak",
