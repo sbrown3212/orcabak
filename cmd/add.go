@@ -13,7 +13,7 @@ func NewAddCmd(state *app.State) *cobra.Command {
 		Args:              cobra.MinimumNArgs(1),
 		ValidArgsFunction: completion.NewAddFileCompletion(state),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			profileDir := app.ResoveProfileDir(state.Config.SlicerCfgLocation)
+			profileDir := app.ResoveProfileDir(state.Config.OrcaCfgPath)
 			err := state.Git.Add(profileDir)
 			if err != nil {
 				return err

@@ -21,7 +21,7 @@ func NewCommitCmd(state *app.State) *cobra.Command {
 		Short: "Commit staged files",
 		Args:  cobra.MinimumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			profileDir := app.ResoveProfileDir(state.Config.SlicerCfgLocation)
+			profileDir := app.ResoveProfileDir(state.Config.OrcaCfgPath)
 			commitOutput, err := state.Git.Commit(profileDir)
 			if err != nil {
 				if strings.Contains(commitOutput, worktreeCeanCommitFailure) {

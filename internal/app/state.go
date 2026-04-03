@@ -6,8 +6,8 @@ import (
 )
 
 type Config struct {
-	SlicerCfgLocation string `mapstructure:"orca-cfg-path"`
-	RemoteRepoURL     string `mapstructure:"remote-repo-url"`
+	OrcaCfgPath   string `mapstructure:"orca-cfg-path"`
+	RemoteRepoURL string `mapstructure:"remote-repo-url"`
 }
 
 type State struct {

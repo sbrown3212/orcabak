@@ -11,7 +11,7 @@ func NewAddFileCompletion(state *app.State) cobra.CompletionFunc {
 	return func(
 		cmd *cobra.Command, args []string, toComplete string,
 	) ([]cobra.Completion, cobra.ShellCompDirective) {
-		gitStatus, err := state.Git.Status(state.Config.SlicerCfgLocation)
+		gitStatus, err := state.Git.Status(state.Config.OrcaCfgPath)
 		if err != nil {
 			return nil, cobra.ShellCompDirectiveDefault
 		}

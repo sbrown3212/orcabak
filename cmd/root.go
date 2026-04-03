@@ -24,7 +24,7 @@ wrapper.`,
 			state.Config = config
 
 			state.Printer.Verbosef("App config location: %s\n", state.AppCfgLocation)
-			state.Printer.Verbosef("Slicer config location: %s\n", state.Config.SlicerCfgLocation)
+			state.Printer.Verbosef("Slicer config location: %s\n", state.Config.OrcaCfgPath)
 			state.Printer.Verbosef("Remote Repo URL: %s\n", state.Config.RemoteRepoURL)
 
 			return nil
@@ -38,7 +38,7 @@ wrapper.`,
 		"config file (default is $HOME/.orca_bak.yaml)",
 	)
 	rootCmd.PersistentFlags().StringVar(
-		&state.Config.SlicerCfgLocation,
+		&state.Config.OrcaCfgPath,
 		"orca-cfg-path",
 		"",
 		"path to 'OrcaSlicer' app directory (OS specific)",
