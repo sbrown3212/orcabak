@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/sbrown3212/orcabak/internal/domain"
 	"github.com/sbrown3212/orcabak/internal/printer"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -21,7 +22,7 @@ const (
 
 var ErrUserCfgDirNotFound = errors.New("unable to find user config directory location")
 
-func LoadConfig(cmd *cobra.Command, cfgPath string, p *printer.Printer) (Config, error) {
+func LoadConfig(cmd *cobra.Command, cfgPath string, p *printer.Printer) (domain.Config, error) {
 	p.Verboseln("Initializing config...")
 	v := viper.New()
 
@@ -30,14 +31,14 @@ func LoadConfig(cmd *cobra.Command, cfgPath string, p *printer.Printer) (Config,
 		p.Verboseln("Using app config location from state")
 		normalizedCfgPath, err := normalizePath(cfgPath)
 		if err != nil {
-			return Config{}, err
+			return domain.Config{}, err
 		}
 		v.SetConfigFile(normalizedCfgPath)
 	} else {
 		p.Verboseln("Using default app config location")
 		userCfgDir, err := os.UserConfigDir()
 		if err != nil {
-			return Config{}, ErrUserCfgDirNotFound
+			return domain.Config{}, ErrUserCfgDirNotFound
 		}
 
 		v.AddConfigPath(filepath.Join(userCfgDir, appCfgDirName))
@@ -49,7 +50,7 @@ func LoadConfig(cmd *cobra.Command, cfgPath string, p *printer.Printer) (Config,
 	if err := v.ReadInConfig(); err != nil {
 		// Ignore if config file does not exist
 		if _, ok := err.(viper.ConfigFileNotFoundError); !ok {
-			return Config{}, err
+			return domain.Config{}, err
 		}
 	}
 
@@ -62,17 +63,17 @@ func LoadConfig(cmd *cobra.Command, cfgPath string, p *printer.Printer) (Config,
 
 	err := v.BindPFlags(cmd.Flags())
 	if err != nil {
-		return Config{}, err
+		return domain.Config{}, err
 	}
 
-	var config Config
+	var config domain.Config
 	if err := v.Unmarshal(&config); err != nil {
-		return Config{}, fmt.Errorf("failed to unmarshal to config: %w", err)
+		return domain.Config{}, fmt.Errorf("failed to unmarshal to config: %w", err)
 	}
 
 	normalizedPath, err := normalizePath(config.OrcaCfgPath)
 	if err != nil {
-		return Config{}, err
+		return domain.Config{}, err
 	}
 	config.OrcaCfgPath = normalizedPath
 
