@@ -11,7 +11,8 @@ func NewStatusCmd(state *app.State) *cobra.Command {
 		Short: "View status of Orca Slicer profiles",
 		// Long: ``,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			output, err := state.Git.Status(state.SlicerCfgLocation)
+			profileDir := app.ResoveProfileDir(state.Config.OrcaCfgPath)
+			output, err := state.Git.Status(profileDir)
 			cobra.CheckErr(err)
 
 			// fmt.Printf("%+v\n", output)

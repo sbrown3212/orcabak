@@ -1,14 +1,9 @@
 package cmd
 
 import (
-	"os"
-	"path/filepath"
-
 	"github.com/sbrown3212/orcabak/internal/app"
 	"github.com/spf13/cobra"
 )
-
-var cfgFile string
 
 func NewRootCmd(state *app.State) *cobra.Command {
 	rootCmd := &cobra.Command{
@@ -19,19 +14,18 @@ configuration and various profiles by using Git. It also aids in pushing
 these files to a GitHub repo. Essentially, it is an Orca Slicer aware git
 wrapper.`,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-			usrCfgDir, _ := os.UserConfigDir()
-
-			if state.SlicerCfgLocation == "" {
-				state.SlicerCfgLocation = filepath.Join(
-					usrCfgDir, "OrcaSlicer-test", "user", "default",
-				)
-			} else {
-				state.SlicerCfgLocation = filepath.Clean(state.SlicerCfgLocation)
+			config, err := app.LoadConfig(cmd, state.AppCfgLocation, state.Printer)
+			if err != nil {
+				return err
 			}
 
-			state.Printer.Verbosef("Slicer config path: %s\n", state.SlicerCfgLocation)
+			state.Config = config
 
-			return app.LoadAppConfig(cmd, cfgFile, state.Printer)
+			state.Printer.Verbosef("App config location: %s\n", state.AppCfgLocation)
+			state.Printer.Verbosef("Slicer config location: %s\n", state.Config.OrcaCfgPath)
+			state.Printer.Verbosef("Remote Repo URL: %s\n", state.Config.RemoteRepoURL)
+
+			return nil
 		},
 	}
 
@@ -39,11 +33,11 @@ wrapper.`,
 		&state.AppCfgLocation,
 		"config-path",
 		"",
-		"config file (default is $HOME/.orca_bak.yaml)",
+		"config file (default is orcabak/config.json in your OS's app config directory)",
 	)
 	rootCmd.PersistentFlags().StringVar(
-		&state.SlicerCfgLocation,
-		"slicer-path",
+		&state.Config.OrcaCfgPath,
+		"orca-cfg-path",
 		"",
 		"path to 'OrcaSlicer' app directory (OS specific)",
 	)
