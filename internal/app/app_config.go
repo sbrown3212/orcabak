@@ -3,8 +3,6 @@ package app
 import (
 	"errors"
 	"fmt"
-	"os"
-	"path/filepath"
 	"strings"
 
 	"github.com/sbrown3212/orcabak/internal/domain"
@@ -14,10 +12,7 @@ import (
 )
 
 const (
-	envVarPrefix   = "ORCABAK"
-	appCfgDirName  = "orcabak"
-	appCfgFileName = "config"
-	appCfgFileType = "json"
+	envVarPrefix = "ORCABAK"
 )
 
 var ErrUserCfgDirNotFound = errors.New("unable to find user config directory location")
@@ -25,26 +20,7 @@ var ErrUserCfgDirNotFound = errors.New("unable to find user config directory loc
 func LoadConfig(cmd *cobra.Command, cfgPath string, p *printer.Printer) (domain.Config, error) {
 	p.Verboseln("Initializing config...")
 	v := viper.New()
-
-	// Get config file location (default or from root persistent flag)
-	if cfgPath != "" {
-		p.Verboseln("Using app config location from state")
-		normalizedCfgPath, err := normalizePath(cfgPath)
-		if err != nil {
-			return domain.Config{}, err
-		}
-		v.SetConfigFile(normalizedCfgPath)
-	} else {
-		p.Verboseln("Using default app config location")
-		userCfgDir, err := os.UserConfigDir()
-		if err != nil {
-			return domain.Config{}, ErrUserCfgDirNotFound
-		}
-
-		v.AddConfigPath(filepath.Join(userCfgDir, appCfgDirName))
-		v.SetConfigName(appCfgFileName)
-		v.SetConfigType(appCfgFileType)
-	}
+	v.SetConfigFile(cfgPath)
 
 	// Read config file
 	if err := v.ReadInConfig(); err != nil {
@@ -78,35 +54,4 @@ func LoadConfig(cmd *cobra.Command, cfgPath string, p *printer.Printer) (domain.
 	config.OrcaCfgPath = normalizedPath
 
 	return config, nil
-}
-
-func expandPath(path string) (string, error) {
-	if path == "~" {
-		return os.UserHomeDir()
-	}
-
-	if strings.HasPrefix(path, "~/") || strings.HasPrefix(path, "~\\") {
-		home, err := os.UserHomeDir()
-		if err != nil {
-			return "", err
-		}
-		return filepath.Join(home, path[2:]), nil
-	}
-	return path, nil
-}
-
-func normalizePath(path string) (string, error) {
-	path = os.ExpandEnv(path)
-
-	expandedPath, err := expandPath(path)
-	if err != nil {
-		return "", err
-	}
-
-	abs, err := filepath.Abs(expandedPath)
-	if err != nil {
-		return "", err
-	}
-
-	return filepath.Clean(abs), nil
 }

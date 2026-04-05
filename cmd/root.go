@@ -6,6 +6,8 @@ import (
 )
 
 func NewRootCmd(state *app.State) *cobra.Command {
+	var flagAppCfgPath string
+
 	rootCmd := &cobra.Command{
 		Use:   "orcabak",
 		Short: "An Orca Slicer specific git wrapper.",
@@ -14,6 +16,12 @@ configuration and various profiles by using Git. It also aids in pushing
 these files to a GitHub repo. Essentially, it is an Orca Slicer aware git
 wrapper.`,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+			cfgPath, err := app.ResolveAppCfgPath(flagAppCfgPath)
+			if err != nil {
+				return err
+			}
+			state.AppCfgLocation = cfgPath
+
 			config, err := app.LoadConfig(cmd, state.AppCfgLocation, state.Printer)
 			if err != nil {
 				return err
@@ -30,7 +38,7 @@ wrapper.`,
 	}
 
 	rootCmd.PersistentFlags().StringVar(
-		&state.AppCfgLocation,
+		&flagAppCfgPath,
 		"config-path",
 		"",
 		"config file (default is orcabak/config.json in your OS's app config directory)",
