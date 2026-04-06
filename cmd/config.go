@@ -13,6 +13,7 @@ func NewConfigCmd(state *app.State) *cobra.Command {
 
 	configCmd.AddCommand(NewConfigGetCmd(state))
 	configCmd.AddCommand(NewConfigSetCmd(state))
+	configCmd.AddCommand(NewConfigUnsetCmd(state))
 
 	return configCmd
 }
@@ -61,4 +62,26 @@ func NewConfigSetCmd(state *app.State) *cobra.Command {
 	}
 
 	return setCmd
+}
+
+func NewConfigUnsetCmd(state *app.State) *cobra.Command {
+	unsetCmd := &cobra.Command{
+		Use:               "unset <key>",
+		Short:             "Unset value for a given config option",
+		Args:              cobra.ExactArgs(1),
+		ValidArgsFunction: NewConfigUnsetCompletion(),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			service := app.ConfigService{CfgPath: state.AppCfgLocation}
+
+			key := args[0]
+			err := service.Unset(key)
+			if err != nil {
+				return err
+			}
+
+			return nil
+		},
+	}
+
+	return unsetCmd
 }

@@ -57,3 +57,26 @@ func (c *ConfigService) Set(key, val string) error {
 
 	return nil
 }
+
+func (c *ConfigService) Unset(key string) error {
+	configCopy, err := config.ReadConfigFile(c.CfgPath)
+	if err != nil {
+		return fmt.Errorf("failed to read config from file: %w", err)
+	}
+
+	switch key {
+	case "orca-cfg-path":
+		configCopy.OrcaCfgPath = ""
+	case "remote-repo-url":
+		configCopy.RemoteRepoURL = ""
+	default:
+		return ErrCfgKeyNotFound
+	}
+
+	err = config.WriteConfigToFile(configCopy, c.CfgPath)
+	if err != nil {
+		return fmt.Errorf("failed to update config: %w", err)
+	}
+
+	return nil
+}

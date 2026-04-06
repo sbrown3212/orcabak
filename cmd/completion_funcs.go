@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"github.com/sbrown3212/orcabak/internal/app"
+	"github.com/sbrown3212/orcabak/internal/config"
 	"github.com/sbrown3212/orcabak/internal/domain"
 	"github.com/spf13/cobra"
 )
@@ -34,5 +36,30 @@ func NewConfigSetCompletion() cobra.CompletionFunc {
 		default:
 			return nil, cobra.ShellCompDirectiveNoFileComp
 		}
+	}
+}
+
+func NewConfigUnsetCompletion() cobra.CompletionFunc {
+	return func(cmd *cobra.Command, args []string, toComplete string) (
+		[]string, cobra.ShellCompDirective,
+	) {
+		flagPath, err := cmd.Flags().GetString("config-path")
+		if err != nil {
+			return nil, cobra.ShellCompDirectiveNoFileComp
+		}
+		cfgPath, err := app.ResolveAppCfgPath(flagPath)
+		if err != nil {
+			return nil, cobra.ShellCompDirectiveNoFileComp
+		}
+		config, _ := config.ReadConfigFile(cfgPath)
+		var suggestions []string
+		if config.OrcaCfgPath != "" {
+			suggestions = append(suggestions, "orca-cfg-path")
+		}
+		if config.RemoteRepoURL != "" {
+			suggestions = append(suggestions, "remote-repo-url")
+		}
+
+		return suggestions, cobra.ShellCompDirectiveNoFileComp
 	}
 }
