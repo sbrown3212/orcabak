@@ -12,6 +12,7 @@ func NewConfigCmd(state *app.State) *cobra.Command {
 	}
 
 	configCmd.AddCommand(NewConfigGetCmd(state))
+	configCmd.AddCommand(NewConfigSetCmd(state))
 
 	return configCmd
 }
@@ -37,4 +38,27 @@ func NewConfigGetCmd(state *app.State) *cobra.Command {
 	}
 
 	return getCmd
+}
+
+func NewConfigSetCmd(state *app.State) *cobra.Command {
+	setCmd := &cobra.Command{
+		Use:               "set <key> <value>",
+		Short:             "Set value for a given config option",
+		Args:              cobra.ExactArgs(2),
+		ValidArgsFunction: NewConfigSetCompletion(),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			service := app.ConfigService{CfgPath: state.AppCfgLocation}
+
+			key := args[0]
+			val := args[1]
+			err := service.Set(key, val)
+			if err != nil {
+				return err
+			}
+
+			return nil
+		},
+	}
+
+	return setCmd
 }
