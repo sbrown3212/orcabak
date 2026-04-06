@@ -29,9 +29,10 @@ wrapper.`,
 
 			state.Config = config
 
-			state.Printer.Verbosef("App config location: %s\n", state.AppCfgLocation)
-			state.Printer.Verbosef("Slicer config location: %s\n", state.Config.OrcaCfgPath)
-			state.Printer.Verbosef("Remote Repo URL: %s\n", state.Config.RemoteRepoURL)
+			state.Printer.Verboseln("Config:")
+			state.Printer.Verbosef("- OrcaSlicer config path: %s\n", state.Config.OrcaCfgPath)
+			state.Printer.Verbosef("- Remote repo URL: %s\n", state.Config.RemoteRepoURL)
+			state.Printer.Verboseln()
 
 			return nil
 		},
@@ -56,6 +57,7 @@ wrapper.`,
 	rootCmd.AddCommand(NewStatusCmd(state))
 	rootCmd.AddCommand(NewAddCmd(state))
 	rootCmd.AddCommand(NewCommitCmd(state))
+	rootCmd.AddCommand(NewConfigCmd(state))
 
 	return rootCmd
 }
