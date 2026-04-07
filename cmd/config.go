@@ -14,6 +14,7 @@ func NewConfigCmd(state *app.State) *cobra.Command {
 	configCmd.AddCommand(NewConfigGetCmd(state))
 	configCmd.AddCommand(NewConfigSetCmd(state))
 	configCmd.AddCommand(NewConfigUnsetCmd(state))
+	configCmd.AddCommand(NewConfigListCmd(state))
 
 	return configCmd
 }
@@ -84,4 +85,27 @@ func NewConfigUnsetCmd(state *app.State) *cobra.Command {
 	}
 
 	return unsetCmd
+}
+
+func NewConfigListCmd(state *app.State) *cobra.Command {
+	listCmd := &cobra.Command{
+		Use:   "list",
+		Short: "List all values set in config",
+		Args:  cobra.NoArgs,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			service := app.ConfigService{CfgPath: state.AppCfgLocation}
+
+			output, err := service.List()
+			if err != nil {
+				return err
+			}
+
+			for _, line := range output {
+				state.Printer.Println(line)
+			}
+			return nil
+		},
+	}
+
+	return listCmd
 }

@@ -80,3 +80,19 @@ func (c *ConfigService) Unset(key string) error {
 
 	return nil
 }
+
+func (c *ConfigService) List() ([]string, error) {
+	config, err := config.ReadConfigFile(c.CfgPath)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read config from file: %w", err)
+	}
+
+	list := config.ItemList()
+	var lines []string
+	for _, item := range list {
+		line := fmt.Sprintf("%s=%s", item.Key, item.Value)
+		lines = append(lines, line)
+	}
+
+	return lines, nil
+}
