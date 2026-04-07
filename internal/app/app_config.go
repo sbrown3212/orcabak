@@ -48,6 +48,20 @@ func LoadConfig(cmd *cobra.Command, cfgPath string, p *printer.Printer) (domain.
 		return domain.Config{}, fmt.Errorf("failed to unmarshal to config: %w", err)
 	}
 
+	if config.OrcaCfgPath != "" {
+		normalizedPath, err := normalizePath(config.OrcaCfgPath)
+		if err != nil {
+			return domain.Config{}, err
+		}
+		config.OrcaCfgPath = normalizedPath
+	} else {
+		defaultPath, err := DefaultOrcaConfigPath()
+		if err != nil {
+			return domain.Config{}, nil
+		}
+		config.OrcaCfgPath = defaultPath
+	}
+
 	normalizedPath, err := normalizePath(config.OrcaCfgPath)
 	if err != nil {
 		return domain.Config{}, err
