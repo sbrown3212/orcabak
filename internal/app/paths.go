@@ -9,6 +9,7 @@ import (
 const (
 	appCfgDirName  = "orcabak"
 	appCfgFileName = "config.json"
+	orcaCfgDirName = "OrcaSlicer"
 )
 
 func ResolveAppCfgPath(cfgPath string) (string, error) {
@@ -21,14 +22,30 @@ func ResolveAppCfgPath(cfgPath string) (string, error) {
 		return cfgPath, nil
 	}
 
-	userCfgDir, err := os.UserConfigDir()
+	cfgPath, err := DefaultAppConfigPath()
 	if err != nil {
 		return "", err
 	}
 
-	cfgPath = filepath.Join(userCfgDir, appCfgDirName, appCfgFileName)
-
 	return cfgPath, nil
+}
+
+func DefaultAppConfigPath() (string, error) {
+	configDir, err := os.UserConfigDir()
+	if err != nil {
+		return "", err
+	}
+
+	return filepath.Join(configDir, appCfgDirName, appCfgFileName), nil
+}
+
+func DefaultOrcaConfigPath() (string, error) {
+	configDir, err := os.UserConfigDir()
+	if err != nil {
+		return "", err
+	}
+
+	return filepath.Join(configDir, orcaCfgDirName), nil
 }
 
 func expandPath(path string) (string, error) {
