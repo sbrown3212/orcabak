@@ -3,6 +3,7 @@ package app
 import (
 	"errors"
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/sbrown3212/orcabak/internal/domain"
@@ -24,8 +25,8 @@ func LoadConfig(cmd *cobra.Command, cfgPath string, p *printer.Printer) (domain.
 
 	// Read config file
 	if err := v.ReadInConfig(); err != nil {
-		// Ignore if config file does not exist
-		if _, ok := err.(viper.ConfigFileNotFoundError); !ok {
+		var notFoundErr viper.ConfigFileNotFoundError
+		if !errors.As(err, &notFoundErr) && !os.IsNotExist(err) {
 			return domain.Config{}, err
 		}
 	}
