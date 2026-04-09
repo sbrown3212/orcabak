@@ -14,7 +14,15 @@ const (
 	profileDir     = "user/default"
 )
 
-var ErrNotGitRepo = errors.New("OrcaSlicer config directory is not a git repository")
+const InitializeRepoSuggestion = `OrcaSlicer config directory is not a git repository.
+
+Initialize it with:
+  orcabak init
+
+If your config is in a different location, set it with:
+  orcabak config set orca-cfg-path <path>`
+
+var ErrNotGitRepo = errors.New("not a git repository")
 
 func EnsureGitRepo(path string) error {
 	if isGitRepo(path) {

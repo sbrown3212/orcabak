@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/sbrown3212/orcabak/internal/app"
@@ -25,7 +26,7 @@ func NewCommitCmd(state *app.State) *cobra.Command {
 			profileDir := paths.ResoveProfileDir(state.Config.OrcaCfgPath)
 			err := paths.EnsureGitRepo(profileDir)
 			if err != nil {
-				return err
+				return fmt.Errorf("%s\n\n: %w", paths.InitializeRepoSuggestion, err)
 			}
 			commitOutput, err := state.Git.Commit(profileDir)
 			if err != nil {

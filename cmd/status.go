@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/sbrown3212/orcabak/internal/app"
 	"github.com/sbrown3212/orcabak/internal/paths"
 	"github.com/spf13/cobra"
@@ -15,7 +17,7 @@ func NewStatusCmd(state *app.State) *cobra.Command {
 			profileDir := paths.ResoveProfileDir(state.Config.OrcaCfgPath)
 			err := paths.EnsureGitRepo(profileDir)
 			if err != nil {
-				return err
+				return fmt.Errorf("%s\n\n: %w", paths.InitializeRepoSuggestion, err)
 			}
 			output, err := state.Git.Status(profileDir)
 			if err != nil {
