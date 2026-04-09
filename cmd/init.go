@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/sbrown3212/orcabak/internal/app"
+	"github.com/sbrown3212/orcabak/internal/paths"
 	"github.com/spf13/cobra"
 )
 
@@ -13,7 +14,7 @@ func NewInitCmd(state *app.State) *cobra.Command {
 		Short: "Initialize git repo in OrcaSlicer config directory",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			profileDir := app.ResoveProfileDir(state.Config.OrcaCfgPath)
+			profileDir := paths.ResoveProfileDir(state.Config.OrcaCfgPath)
 			output, err := state.Git.Init(profileDir)
 			if err != nil {
 				return err

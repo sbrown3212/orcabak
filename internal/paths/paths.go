@@ -1,6 +1,7 @@
-package app
+package paths
 
 import (
+	"errors"
 	"os"
 	"path/filepath"
 	"strings"
@@ -10,11 +11,27 @@ const (
 	appCfgDirName  = "orcabak"
 	appCfgFileName = "config.json"
 	orcaCfgDirName = "OrcaSlicer"
+	profileDir     = "user/default"
 )
+
+var ErrNotGitRepo = errors.New("OrcaSlicer config directory is not a git repository")
+
+func EnsureGitRepo(path string) error {
+	if isGitRepo(path) {
+		return nil
+	}
+	return ErrNotGitRepo
+}
+
+func isGitRepo(path string) bool {
+	gitPath := filepath.Join(path, ".git")
+	_, err := os.Stat(gitPath)
+	return err == nil
+}
 
 func ResolveAppCfgPath(cfgPath string) (string, error) {
 	if cfgPath != "" {
-		cfgPath, err := normalizePath(cfgPath)
+		cfgPath, err := NormalizePath(cfgPath)
 		if err != nil {
 			return "", err
 		}
@@ -48,6 +65,10 @@ func DefaultOrcaConfigPath() (string, error) {
 	return filepath.Join(configDir, orcaCfgDirName), nil
 }
 
+func ResoveProfileDir(orcaPath string) string {
+	return filepath.Join(orcaPath, profileDir)
+}
+
 func expandPath(path string) (string, error) {
 	if path == "~" {
 		return os.UserHomeDir()
@@ -63,7 +84,7 @@ func expandPath(path string) (string, error) {
 	return path, nil
 }
 
-func normalizePath(path string) (string, error) {
+func NormalizePath(path string) (string, error) {
 	path = os.ExpandEnv(path)
 
 	expandedPath, err := expandPath(path)
@@ -78,3 +99,5 @@ func normalizePath(path string) (string, error) {
 
 	return filepath.Clean(abs), nil
 }
+
+// TODO: TEST THAT NEW PATH PACKAGE WORKS

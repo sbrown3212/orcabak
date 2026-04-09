@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/sbrown3212/orcabak/internal/domain"
+	"github.com/sbrown3212/orcabak/internal/paths"
 	"github.com/sbrown3212/orcabak/internal/printer"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -49,20 +50,20 @@ func LoadConfig(cmd *cobra.Command, cfgPath string, p *printer.Printer) (domain.
 	}
 
 	if config.OrcaCfgPath != "" {
-		normalizedPath, err := normalizePath(config.OrcaCfgPath)
+		normalizedPath, err := paths.NormalizePath(config.OrcaCfgPath)
 		if err != nil {
 			return domain.Config{}, err
 		}
 		config.OrcaCfgPath = normalizedPath
 	} else {
-		defaultPath, err := DefaultOrcaConfigPath()
+		defaultPath, err := paths.DefaultOrcaConfigPath()
 		if err != nil {
 			return domain.Config{}, nil
 		}
 		config.OrcaCfgPath = defaultPath
 	}
 
-	normalizedPath, err := normalizePath(config.OrcaCfgPath)
+	normalizedPath, err := paths.NormalizePath(config.OrcaCfgPath)
 	if err != nil {
 		return domain.Config{}, err
 	}

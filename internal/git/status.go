@@ -5,6 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"os/exec"
+
+	"github.com/sbrown3212/orcabak/internal/paths"
 )
 
 type GitStatus struct {
@@ -40,8 +42,6 @@ const (
 	StatusTypeChange StatusType = "type_change"
 )
 
-var ErrNotGitRepo = errors.New("not a git repository")
-
 func (g *GitCLIClient) Status(repoDir string) (GitStatus, error) {
 	output, err := g.Runner.Run(repoDir, "git", "status", "--porcelain=v2", "--branch")
 	// Return early if no error
@@ -52,7 +52,7 @@ func (g *GitCLIClient) Status(repoDir string) (GitStatus, error) {
 	var exitErr *exec.ExitError
 	if errors.As(err, &exitErr) {
 		if bytes.Contains(exitErr.Stderr, []byte("not a git repository")) {
-			return GitStatus{}, ErrNotGitRepo
+			return GitStatus{}, paths.ErrNotGitRepo
 		}
 	}
 

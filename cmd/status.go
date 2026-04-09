@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/sbrown3212/orcabak/internal/app"
+	"github.com/sbrown3212/orcabak/internal/paths"
 	"github.com/spf13/cobra"
 )
 
@@ -11,7 +12,7 @@ func NewStatusCmd(state *app.State) *cobra.Command {
 		Short: "View status of Orca Slicer profiles",
 		// Long: ``,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			profileDir := app.ResoveProfileDir(state.Config.OrcaCfgPath)
+			profileDir := paths.ResoveProfileDir(state.Config.OrcaCfgPath)
 			output, err := state.Git.Status(profileDir)
 			cobra.CheckErr(err)
 

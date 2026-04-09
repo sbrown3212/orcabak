@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/sbrown3212/orcabak/internal/app"
+	"github.com/sbrown3212/orcabak/internal/paths"
 	"github.com/spf13/cobra"
 )
 
@@ -21,7 +22,7 @@ func NewCommitCmd(state *app.State) *cobra.Command {
 		Short: "Commit staged files",
 		Args:  cobra.MinimumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			profileDir := app.ResoveProfileDir(state.Config.OrcaCfgPath)
+			profileDir := paths.ResoveProfileDir(state.Config.OrcaCfgPath)
 			commitOutput, err := state.Git.Commit(profileDir)
 			if err != nil {
 				if strings.Contains(commitOutput, worktreeCeanCommitFailure) {
