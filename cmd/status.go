@@ -14,10 +14,13 @@ func NewStatusCmd(state *app.State) *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			profileDir := paths.ResoveProfileDir(state.Config.OrcaCfgPath)
 			output, err := state.Git.Status(profileDir)
-			cobra.CheckErr(err)
+			if err != nil {
+				return err
+			}
 
-			// fmt.Printf("%+v\n", output)
-			state.Printer.PrintStatus(output)
+			if err = state.Printer.PrintStatus(output); err != nil {
+				return err
+			}
 
 			return nil
 		},

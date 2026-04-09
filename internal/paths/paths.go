@@ -99,5 +99,3 @@ func NormalizePath(path string) (string, error) {
 
 	return filepath.Clean(abs), nil
 }
-
-// TODO: TEST THAT NEW PATH PACKAGE WORKS

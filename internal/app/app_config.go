@@ -17,8 +17,6 @@ const (
 	envVarPrefix = "ORCABAK"
 )
 
-var ErrUserCfgDirNotFound = errors.New("unable to find user config directory location")
-
 func LoadConfig(cmd *cobra.Command, cfgPath string, p *printer.Printer) (domain.Config, error) {
 	p.Verboseln("Initializing config...")
 	v := viper.New()

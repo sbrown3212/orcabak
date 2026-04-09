@@ -42,8 +42,8 @@ const (
 	StatusTypeChange StatusType = "type_change"
 )
 
-func (g *GitCLIClient) Status(repoDir string) (GitStatus, error) {
-	output, err := g.Runner.Run(repoDir, "git", "status", "--porcelain=v2", "--branch")
+func (g *GitCLIClient) Status(orcaProfileDir string) (GitStatus, error) {
+	output, err := g.Runner.Run(orcaProfileDir, "git", "status", "--porcelain=v2", "--branch")
 	// Return early if no error
 	if err == nil {
 		return parseGitStatus(output)
