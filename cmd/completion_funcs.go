@@ -1,9 +1,9 @@
 package cmd
 
 import (
-	"github.com/sbrown3212/orcabak/internal/app"
 	"github.com/sbrown3212/orcabak/internal/config"
 	"github.com/sbrown3212/orcabak/internal/domain"
+	"github.com/sbrown3212/orcabak/internal/paths"
 	"github.com/spf13/cobra"
 )
 
@@ -47,7 +47,7 @@ func NewConfigUnsetCompletion() cobra.CompletionFunc {
 		if err != nil {
 			return nil, cobra.ShellCompDirectiveNoFileComp
 		}
-		cfgPath, err := app.ResolveAppCfgPath(flagPath)
+		cfgPath, err := paths.ResolveAppCfgPath(flagPath)
 		if err != nil {
 			return nil, cobra.ShellCompDirectiveNoFileComp
 		}

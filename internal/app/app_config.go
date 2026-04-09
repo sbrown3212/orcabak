@@ -3,9 +3,11 @@ package app
 import (
 	"errors"
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/sbrown3212/orcabak/internal/domain"
+	"github.com/sbrown3212/orcabak/internal/paths"
 	"github.com/sbrown3212/orcabak/internal/printer"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -15,8 +17,6 @@ const (
 	envVarPrefix = "ORCABAK"
 )
 
-var ErrUserCfgDirNotFound = errors.New("unable to find user config directory location")
-
 func LoadConfig(cmd *cobra.Command, cfgPath string, p *printer.Printer) (domain.Config, error) {
 	p.Verboseln("Initializing config...")
 	v := viper.New()
@@ -24,8 +24,8 @@ func LoadConfig(cmd *cobra.Command, cfgPath string, p *printer.Printer) (domain.
 
 	// Read config file
 	if err := v.ReadInConfig(); err != nil {
-		// Ignore if config file does not exist
-		if _, ok := err.(viper.ConfigFileNotFoundError); !ok {
+		var notFoundErr viper.ConfigFileNotFoundError
+		if !errors.As(err, &notFoundErr) && !os.IsNotExist(err) {
 			return domain.Config{}, err
 		}
 	}
@@ -47,7 +47,21 @@ func LoadConfig(cmd *cobra.Command, cfgPath string, p *printer.Printer) (domain.
 		return domain.Config{}, fmt.Errorf("failed to unmarshal to config: %w", err)
 	}
 
-	normalizedPath, err := normalizePath(config.OrcaCfgPath)
+	if config.OrcaCfgPath != "" {
+		normalizedPath, err := paths.NormalizePath(config.OrcaCfgPath)
+		if err != nil {
+			return domain.Config{}, err
+		}
+		config.OrcaCfgPath = normalizedPath
+	} else {
+		defaultPath, err := paths.DefaultOrcaConfigPath()
+		if err != nil {
+			return domain.Config{}, nil
+		}
+		config.OrcaCfgPath = defaultPath
+	}
+
+	normalizedPath, err := paths.NormalizePath(config.OrcaCfgPath)
 	if err != nil {
 		return domain.Config{}, err
 	}

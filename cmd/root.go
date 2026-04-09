@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/sbrown3212/orcabak/internal/app"
+	"github.com/sbrown3212/orcabak/internal/paths"
 	"github.com/spf13/cobra"
 )
 
@@ -16,7 +17,7 @@ configuration and various profiles by using Git. It also aids in pushing
 these files to a GitHub repo. Essentially, it is an Orca Slicer aware git
 wrapper.`,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-			cfgPath, err := app.ResolveAppCfgPath(flagAppCfgPath)
+			cfgPath, err := paths.ResolveAppCfgPath(flagAppCfgPath)
 			if err != nil {
 				return err
 			}
@@ -58,6 +59,7 @@ wrapper.`,
 	rootCmd.AddCommand(NewAddCmd(state))
 	rootCmd.AddCommand(NewCommitCmd(state))
 	rootCmd.AddCommand(NewConfigCmd(state))
+	rootCmd.AddCommand(NewInitCmd(state))
 
 	return rootCmd
 }

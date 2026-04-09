@@ -1,8 +1,6 @@
 package printer
 
-import (
-	"github.com/sbrown3212/orcabak/internal/git"
-)
+import "github.com/sbrown3212/orcabak/internal/git"
 
 func (p *Printer) PrintStatus(status git.GitStatus) error {
 	if status.Branch.Name != "" {

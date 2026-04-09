@@ -1,7 +1,10 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/sbrown3212/orcabak/internal/app"
+	"github.com/sbrown3212/orcabak/internal/paths"
 	"github.com/spf13/cobra"
 )
 
@@ -11,12 +14,19 @@ func NewStatusCmd(state *app.State) *cobra.Command {
 		Short: "View status of Orca Slicer profiles",
 		// Long: ``,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			profileDir := app.ResoveProfileDir(state.Config.OrcaCfgPath)
+			profileDir := paths.ResoveProfileDir(state.Config.OrcaCfgPath)
+			err := paths.EnsureGitRepo(profileDir)
+			if err != nil {
+				return fmt.Errorf("%s\n\n: %w", paths.InitializeRepoSuggestion, err)
+			}
 			output, err := state.Git.Status(profileDir)
-			cobra.CheckErr(err)
+			if err != nil {
+				return err
+			}
 
-			// fmt.Printf("%+v\n", output)
-			state.Printer.PrintStatus(output)
+			if err = state.Printer.PrintStatus(output); err != nil {
+				return err
+			}
 
 			return nil
 		},
