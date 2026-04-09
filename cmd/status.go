@@ -13,6 +13,10 @@ func NewStatusCmd(state *app.State) *cobra.Command {
 		// Long: ``,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			profileDir := paths.ResoveProfileDir(state.Config.OrcaCfgPath)
+			err := paths.EnsureGitRepo(profileDir)
+			if err != nil {
+				return err
+			}
 			output, err := state.Git.Status(profileDir)
 			if err != nil {
 				return err

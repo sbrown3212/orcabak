@@ -15,7 +15,11 @@ func NewAddCmd(state *app.State) *cobra.Command {
 		ValidArgsFunction: completion.NewAddFileCompletion(state),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			profileDir := paths.ResoveProfileDir(state.Config.OrcaCfgPath)
-			err := state.Git.Add(profileDir)
+			err := paths.EnsureGitRepo(profileDir)
+			if err != nil {
+				return err
+			}
+			err = state.Git.Add(profileDir)
 			if err != nil {
 				return err
 			}
