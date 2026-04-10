@@ -60,6 +60,7 @@ wrapper.`,
 	rootCmd.AddCommand(NewCommitCmd(state))
 	rootCmd.AddCommand(NewConfigCmd(state))
 	rootCmd.AddCommand(NewInitCmd(state))
+	rootCmd.AddCommand(NewRemoteCmd(state))
 
 	return rootCmd
 }
