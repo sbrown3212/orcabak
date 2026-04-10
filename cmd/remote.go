@@ -35,6 +35,7 @@ func NewRemoteCmd(state *app.State) *cobra.Command {
 	}
 
 	remoteCmd.AddCommand(NewRemoteAddCmd(state))
+	remoteCmd.AddCommand(NewRemoteRemoveCmd(state))
 
 	return remoteCmd
 }
@@ -72,4 +73,31 @@ func NewRemoteAddCmd(state *app.State) *cobra.Command {
 	}
 
 	return addCmd
+}
+
+func NewRemoteRemoveCmd(state *app.State) *cobra.Command {
+	removeCmd := &cobra.Command{
+		Use:     "remove <name>",
+		Example: "orcabak remote remove origin",
+		Short:   "Remove an existing remote repository",
+		Args:    cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			profileDir := paths.ResoveProfileDir(state.Config.OrcaCfgPath)
+			if err := paths.EnsureGitRepo(profileDir); err != nil {
+				return err
+			}
+
+			output, err := state.Git.RemoteRemove(profileDir, args...)
+			if err != nil {
+				return err
+			}
+
+			state.Printer.Printf(output)
+			state.Printer.Verboseln("Successfully removed remote")
+
+			return nil
+		},
+	}
+
+	return removeCmd
 }
