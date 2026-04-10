@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/sbrown3212/orcabak/internal/app"
 	"github.com/sbrown3212/orcabak/internal/paths"
@@ -33,5 +34,42 @@ func NewRemoteCmd(state *app.State) *cobra.Command {
 		},
 	}
 
+	remoteCmd.AddCommand(NewRemoteAddCmd(state))
+
 	return remoteCmd
+}
+
+func NewRemoteAddCmd(state *app.State) *cobra.Command {
+	addCmd := &cobra.Command{
+		Use:     "add <name> <url>",
+		Example: "orcabak remote add origin https://github.com/user/repo.git",
+		Short:   "Add a remote repository",
+		Args:    cobra.ExactArgs(2),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			name := args[0]
+
+			profileDir := paths.ResoveProfileDir(state.Config.OrcaCfgPath)
+			if err := paths.EnsureGitRepo(profileDir); err != nil {
+				return nil
+			}
+
+			output, err := state.Git.RemoteAdd(profileDir, args...)
+			if err != nil {
+				if strings.Contains("already exists", output) {
+					state.Printer.Printf("Remote %s alread exists\n", name)
+					return err
+				}
+				return err
+			}
+
+			if output != "" {
+				state.Printer.Println(output)
+			}
+			state.Printer.Verboseln("Successfully added remote")
+
+			return nil
+		},
+	}
+
+	return addCmd
 }
