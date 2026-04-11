@@ -27,7 +27,7 @@ func NewRemoteCmd(state *app.State) *cobra.Command {
 			}
 
 			if output != "" {
-				state.Printer.Printf(output)
+				state.Printer.Printf("%s", output)
 			}
 
 			return nil
@@ -92,7 +92,7 @@ func NewRemoteRemoveCmd(state *app.State) *cobra.Command {
 				return err
 			}
 
-			state.Printer.Printf(output)
+			state.Printer.Printf("%s", output)
 			state.Printer.Verboseln("Successfully removed remote")
 
 			return nil
