@@ -1,12 +1,12 @@
 package git
 
-func (g *GitCLIClient) Add(orcaProfileDir string, args ...string) error {
+func (g *GitCLIClient) Add(orcaProfileDir string, args ...string) (string, error) {
 	args = append([]string{"add"}, args...)
 
-	_, err := g.Runner.Run(orcaProfileDir, "git", args...)
+	output, err := g.Runner.Run(orcaProfileDir, "git", args...)
 	if err != nil {
-		return err
+		return string(output), err
 	}
 
-	return nil
+	return string(output), nil
 }

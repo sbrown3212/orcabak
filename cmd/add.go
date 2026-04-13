@@ -21,7 +21,7 @@ func NewAddCmd(state *app.State) *cobra.Command {
 			if err != nil {
 				return fmt.Errorf("%s\n\n: %w", paths.InitializeRepoSuggestion, err)
 			}
-			err = state.Git.Add(profileDir)
+			_, err = state.Git.Add(profileDir, args...)
 			if err != nil {
 				return err
 			}

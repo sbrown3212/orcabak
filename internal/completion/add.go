@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/sbrown3212/orcabak/internal/app"
+	"github.com/sbrown3212/orcabak/internal/paths"
 	"github.com/spf13/cobra"
 )
 
@@ -11,9 +12,10 @@ func NewAddFileCompletion(state *app.State) cobra.CompletionFunc {
 	return func(
 		cmd *cobra.Command, args []string, toComplete string,
 	) ([]cobra.Completion, cobra.ShellCompDirective) {
-		gitStatus, err := state.Git.Status(state.Config.OrcaCfgPath)
+		profileDir := paths.ResoveProfileDir(state.Config.OrcaCfgPath)
+		gitStatus, err := state.Git.Status(profileDir)
 		if err != nil {
-			return nil, cobra.ShellCompDirectiveDefault
+			return nil, cobra.ShellCompDirectiveNoFileComp
 		}
 
 		existing := make(map[string]struct{})
