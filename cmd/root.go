@@ -61,6 +61,7 @@ wrapper.`,
 	rootCmd.AddCommand(NewConfigCmd(state))
 	rootCmd.AddCommand(NewInitCmd(state))
 	rootCmd.AddCommand(NewRemoteCmd(state))
+	rootCmd.AddCommand(NewPushCmd(state))
 
 	return rootCmd
 }
