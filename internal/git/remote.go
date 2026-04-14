@@ -1,5 +1,7 @@
 package git
 
+import "strings"
+
 func (g *GitCLIClient) Remote(orcaProfileDir string, args ...string) (string, error) {
 	args = append([]string{"remote"}, args...)
 
@@ -9,6 +11,17 @@ func (g *GitCLIClient) Remote(orcaProfileDir string, args ...string) (string, er
 	}
 
 	return string(output), nil
+}
+
+func (g *GitCLIClient) GetRemotes(orcaProfileDir string) ([]string, error) {
+	output, err := g.Runner.Run(orcaProfileDir, "git", "remote")
+	if err != nil {
+		return nil, err
+	}
+
+	remotes := strings.Fields(string(output))
+
+	return remotes, nil
 }
 
 func (g *GitCLIClient) RemoteAdd(orcaProfileDir string, args ...string) (string, error) {

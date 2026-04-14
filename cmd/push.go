@@ -55,7 +55,7 @@ func NewPushCmd(state *app.State) *cobra.Command {
 
 			// Get remotes
 			var remote string
-			if args[0] != "" {
+			if len(args) == 1 {
 				remote = args[0]
 			} else {
 				remotes, err := state.Git.GetRemotes(profileDir)
