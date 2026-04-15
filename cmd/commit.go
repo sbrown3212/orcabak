@@ -28,7 +28,7 @@ func NewCommitCmd(state *app.State) *cobra.Command {
 			if err != nil {
 				return fmt.Errorf("%s\n\n: %w", paths.InitializeRepoSuggestion, err)
 			}
-			commitOutput, err := state.Git.Commit(profileDir)
+			commitOutput, err := state.Git.Commit(profileDir, args...)
 			if err != nil {
 				if strings.Contains(commitOutput, worktreeCeanCommitFailure) {
 					state.Printer.Println("Nothing to commit")
