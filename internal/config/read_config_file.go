@@ -12,7 +12,6 @@ func ReadConfigFile(cfgPath string) (domain.Config, error) {
 	dat, err := os.ReadFile(cfgPath)
 	if err != nil {
 		if os.IsNotExist(err) {
-			// fmt.Printf("config file not found\n")
 			return domain.Config{}, nil
 		}
 		return domain.Config{}, fmt.Errorf("failed to read file: %w", err)
