@@ -18,7 +18,7 @@ const (
 func NewCommitCmd(state *app.State) *cobra.Command {
 	commitCmd := &cobra.Command{
 		Use: "commit \"message\" [additional messages...]",
-		Example: `  ocrabak commit "Add new profile" 
+		Example: `  orcabak commit "Add new profile" 
   orcabak commit "Fix extrusion settings" "Lower flow rate to reduce over-extrusion"`,
 		Short: "Commit staged files",
 		Args:  cobra.MinimumNArgs(1),
