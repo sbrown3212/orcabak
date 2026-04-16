@@ -26,7 +26,6 @@ func NewPushCmd(state *app.State) *cobra.Command {
 				return err
 			}
 
-			// Get upstream
 			upstream, err := state.Git.GetUpstream(profileDir)
 			if err != nil && !strings.Contains(upstream, "no upstream configured") {
 				return err
@@ -39,7 +38,6 @@ func NewPushCmd(state *app.State) *cobra.Command {
 				}
 			}
 
-			// Get branch
 			branch, err := state.Git.GetBranch(profileDir)
 			if err != nil {
 				if strings.Contains(branch, "ambiguous argument") {
@@ -53,7 +51,6 @@ func NewPushCmd(state *app.State) *cobra.Command {
 				return fmt.Errorf("failed to determine current branch: %w", err)
 			}
 
-			// Get remotes
 			var remote string
 			if len(args) == 1 {
 				remote = args[0]
