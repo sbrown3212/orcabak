@@ -6,8 +6,8 @@ package main
 import (
 	"os"
 
-	"github.com/sbrown3212/orcabak/cmd"
 	"github.com/sbrown3212/orcabak/internal/app"
+	"github.com/sbrown3212/orcabak/internal/cli"
 	"github.com/sbrown3212/orcabak/internal/git"
 	"github.com/sbrown3212/orcabak/internal/printer"
 )
@@ -20,7 +20,7 @@ func main() {
 		Git:     git,
 	}
 
-	rootCmd := cmd.NewRootCmd(state)
+	rootCmd := cli.NewRootCmd(state)
 
 	if err := rootCmd.Execute(); err != nil {
 		os.Exit(1)
