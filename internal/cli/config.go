@@ -1,4 +1,4 @@
-package cmd
+package cli
 
 import (
 	"github.com/sbrown3212/orcabak/internal/app"

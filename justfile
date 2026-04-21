@@ -10,7 +10,7 @@ alias t := test
 # Build locally
 build:
   mkdir -p {{binary}}
-  go build -o {{binDir}}/{{binary}}
+  go build -o {{binDir}}/{{binary}} ./cmd/orcabak
 
 # Run local binary
 run *ARGS:
