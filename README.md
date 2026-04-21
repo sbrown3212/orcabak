@@ -98,7 +98,7 @@ commands)
 Orcabak is currently distributed via `go install`:
 
 ```sh
-go install github.com/sbrown3212/cmd/orcabak@latest
+go install github.com/sbrown3212/orcabak/cmd/orcabak@latest
 ```
 
 Future releases will include precompiled binaries for common platforms.
