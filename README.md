@@ -89,12 +89,16 @@ architecture, and feature completeness.
 commands)
 - Orca Slicer (or access to an existing Orca Slicer config directory)
 
+> Orcabak is currently tested against Orca Slicer v2.3.1. Compatibility with
+> other versions is expected but not guaranteed, as Orcabak depends on Orca
+> Slicer's configuration directory structure.
+
 ### Install via Go
 
 Orcabak is currently distributed via `go install`:
 
 ```sh
-go install github.com/sbrown3212/cmd/orcabak@latest
+go install github.com/sbrown3212/orcabak/cmd/orcabak@latest
 ```
 
 Future releases will include precompiled binaries for common platforms.
