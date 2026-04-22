@@ -318,6 +318,10 @@ orcabak pull
 
 ## Usage
 
+### Global Flags
+
+- `-v`, `--verbose` - enable verbose output
+
 ### Core Commands
 
 - `init` - initialize a Git repository in the Orca Slicer config directory
