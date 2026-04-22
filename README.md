@@ -18,7 +18,7 @@ powered by Git.
 - [Command Reference](#command-reference)
 - [Design and Architecture](#design-and-architecture)
 - [Challenges and Learnings](#challenges-and-learnings)
-- [Why This Project](#why-this-project)
+- [Motivation](#motivation)
 - [Limitations](#limitations)
 - [Future Improvements](#future-improvements)
 
@@ -390,7 +390,7 @@ Because of this, there were a few features left out. Instead of building out the
 Git-like commands to be as feature full as Git's actual commands, I had to focus
 on prioritizing what Orcabak users would need most.
 
-## Why This Project
+## Motivation
 
 I had installed Klipper on my old Creality Ender 3 a few years back, and I had
 switched to using Orca Slicer around the same time. The print quality was
