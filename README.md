@@ -327,22 +327,25 @@ orcabak pull
 - `init` - initialize a Git repository in the Orca Slicer config directory
 (`OrcaSlicer/user/default/`)
 - `status` - show repository status
-- `add` - stage changes
-- `commit` - commit staged changes
-- `push` - push commits to a remote
-- `pull` - pull changes from a remote (fast-forward only)
+- `add <file-name>` - add a file to staging
+- `commit "<message>"` - commit staged changes with a message (message required,
+creating commit messages in editor not yet supported)
+- `push [remote]` - push commits to a remote. Upstream tracking is set when
+providing remote argument. Remote argument is optional after upstream tracking
+is set.
+- `pull <remote> <remote-branch>` - pull changes from a remote (fast-forward only)
 
 ### Config
 
-- `config get` - retrieve a config value
-- `config set` - set a config value
-- `config unset` - remove a config value
+- `config get <config-option>` - retrieve a config value
+- `config set <config-option>` - set a config value
+- `config unset <config-option>` - remove a config value
 - `config list` - list all config values
 
 ### Remote Management
 
-- `remote add` - add a remote repository
-- `remote remove` - remove a remote repository
+- `remote add <name> <url>` - add a remote repository
+- `remote remove <name>` - remove a remote repository
 
 ## Design and Architecture
 
