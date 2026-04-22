@@ -15,7 +15,7 @@ powered by Git.
 - [Tab Completion](#installing-tab-completion-optional-but-recommended)
 - [Quick Start](#quick-start)
 - [Common Workflows](#common-workflows)
-- [Command Reference](#command-reference)
+- [Usage](#usage)
 - [Design and Architecture](#design-and-architecture)
 - [Challenges and Learnings](#challenges-and-learnings)
 - [Motivation](#motivation)
@@ -316,7 +316,7 @@ orcabak pull <remote_name> <remote_branch>
 orcabak pull
 ```
 
-## Command Reference
+## Usage
 
 ### Core Commands
 
