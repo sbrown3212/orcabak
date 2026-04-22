@@ -21,6 +21,7 @@ powered by Git.
 - [Motivation](#motivation)
 - [Limitations](#limitations)
 - [Future Improvements](#future-improvements)
+- [Contributing](#contributing)
 
 ## Overview
 
@@ -439,3 +440,30 @@ Orcabak, there are many features and improvements yet to come.
 - Improve tab completion across commands
 - Improve usability for users unfamiliar with Git
 - Official binary releases
+
+## Contributing
+
+### Fork and Clone the repo
+
+Fork the repository on GitHub, then clone your fork locally:
+
+```sh
+git clone https://github.com/sbrown3212/orcabak
+cd orcabak
+```
+
+### Build the compiled binary
+
+```sh
+go build ./cmd/orcabak
+```
+
+### Run the test suite
+
+```sh
+go test ./...
+```
+
+### Submit a pull request
+
+Open a pull request from your fork to the `main` branch of this repository.
