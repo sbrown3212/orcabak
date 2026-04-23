@@ -15,12 +15,13 @@ powered by Git.
 - [Tab Completion](#installing-tab-completion-optional-but-recommended)
 - [Quick Start](#quick-start)
 - [Common Workflows](#common-workflows)
-- [Command Reference](#command-reference)
+- [Usage](#usage)
 - [Design and Architecture](#design-and-architecture)
+- [Motivation](#motivation)
 - [Challenges and Learnings](#challenges-and-learnings)
-- [Why This Project](#why-this-project)
 - [Limitations](#limitations)
 - [Future Improvements](#future-improvements)
+- [Contributing](#contributing)
 
 ## Overview
 
@@ -315,29 +316,36 @@ orcabak pull <remote_name> <remote_branch>
 orcabak pull
 ```
 
-## Command Reference
+## Usage
+
+### Global Flags
+
+- `-v`, `--verbose` - enable verbose output
 
 ### Core Commands
 
 - `init` - initialize a Git repository in the Orca Slicer config directory
 (`OrcaSlicer/user/default/`)
 - `status` - show repository status
-- `add` - stage changes
-- `commit` - commit staged changes
-- `push` - push commits to a remote
-- `pull` - pull changes from a remote (fast-forward only)
+- `add <file-name>` - add a file to staging
+- `commit "<message>"` - commit staged changes with a message (message required,
+creating commit messages in editor not yet supported)
+- `push [remote]` - push commits to a remote. Upstream tracking is set when
+providing remote argument. Remote argument is optional after upstream tracking
+is set.
+- `pull <remote> <remote-branch>` - pull changes from a remote (fast-forward only)
 
 ### Config
 
-- `config get` - retrieve a config value
-- `config set` - set a config value
-- `config unset` - remove a config value
+- `config get <config-option>` - retrieve a config value
+- `config set <config-option>` - set a config value
+- `config unset <config-option>` - remove a config value
 - `config list` - list all config values
 
 ### Remote Management
 
-- `remote add` - add a remote repository
-- `remote remove` - remove a remote repository
+- `remote add <name> <url>` - add a remote repository
+- `remote remove <name>` - remove a remote repository
 
 ## Design and Architecture
 
@@ -364,33 +372,7 @@ Command Runner (executes git commands)
 - Enables future separation into application layer
 - Keeps Git concerns isolated
 
-## Challenges and Learnings
-
-### Git Status Parsing
-
-Parsing Git status output was by far the most difficult but crucial part of the
-project. Many Orcabak features rely on the output that comes from the `status`
-command. When diving into Git's documentation, I came across the "short" status
-output, and then the porcelain standards. Porcelain v2 was chosen because it
-was more detailed and robust than v1 and "short" output. This made parsing the
-status output within Orcabak significantly easier.
-
-### Abstracting Git vs Mimicking Git
-
-Initially I planned on abstracting Git to make the tool easier to use for those
-that are less familiar. This turned out to be quite challenging, and I pivoted
-to mimic Git instead. Mimicking Git's core commands allowed me to create the
-backbone of Orcabak before trying to implement more advanced features and
-deciding how things should be abstracted.
-
-### Project Complexity
-
-I underestimated how difficult it would be to create a simple Git wrapper.
-Because of this, there were a few features left out. Instead of building out the
-Git-like commands to be as feature full as Git's actual commands, I had to focus
-on prioritizing what Orcabak users would need most.
-
-## Why This Project
+## Motivation
 
 I had installed Klipper on my old Creality Ender 3 a few years back, and I had
 switched to using Orca Slicer around the same time. The print quality was
@@ -420,6 +402,32 @@ this deep dive into better understanding how Git works, writing tooling with Go,
 and learning more about software architecture. And I am not finished with
 Orcabak, there are many features and improvements yet to come.
 
+## Challenges and Learnings
+
+### Git Status Parsing
+
+Parsing Git status output was by far the most difficult but crucial part of the
+project. Many Orcabak features rely on the output that comes from the `status`
+command. When diving into Git's documentation, I came across the "short" status
+output, and then the porcelain standards. Porcelain v2 was chosen because it
+was more detailed and robust than v1 and "short" output. This made parsing the
+status output within Orcabak significantly easier.
+
+### Abstracting Git vs Mimicking Git
+
+Initially I planned on abstracting Git to make the tool easier to use for those
+that are less familiar. This turned out to be quite challenging, and I pivoted
+to mimic Git instead. Mimicking Git's core commands allowed me to create the
+backbone of Orcabak before trying to implement more advanced features and
+deciding how things should be abstracted.
+
+### Project Complexity
+
+I underestimated how difficult it would be to create a simple Git wrapper.
+Because of this, there were a few features left out. Instead of building out the
+Git-like commands to be as feature full as Git's actual commands, I had to focus
+on prioritizing what Orcabak users would need most.
+
 ## Limitations
 
 - `pull` only supports fast-forward (no merge/rebase handling)
@@ -439,3 +447,30 @@ Orcabak, there are many features and improvements yet to come.
 - Improve tab completion across commands
 - Improve usability for users unfamiliar with Git
 - Official binary releases
+
+## Contributing
+
+### Fork and Clone the repo
+
+Fork the repository on GitHub, then clone your fork locally:
+
+```sh
+git clone https://github.com/sbrown3212/orcabak
+cd orcabak
+```
+
+### Build the compiled binary
+
+```sh
+go build ./cmd/orcabak
+```
+
+### Run the test suite
+
+```sh
+go test ./...
+```
+
+### Submit a pull request
+
+Open a pull request from your fork to the `main` branch of this repository.
