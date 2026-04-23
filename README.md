@@ -17,8 +17,8 @@ powered by Git.
 - [Common Workflows](#common-workflows)
 - [Usage](#usage)
 - [Design and Architecture](#design-and-architecture)
-- [Challenges and Learnings](#challenges-and-learnings)
 - [Motivation](#motivation)
+- [Challenges and Learnings](#challenges-and-learnings)
 - [Limitations](#limitations)
 - [Future Improvements](#future-improvements)
 - [Contributing](#contributing)
@@ -372,32 +372,6 @@ Command Runner (executes git commands)
 - Enables future separation into application layer
 - Keeps Git concerns isolated
 
-## Challenges and Learnings
-
-### Git Status Parsing
-
-Parsing Git status output was by far the most difficult but crucial part of the
-project. Many Orcabak features rely on the output that comes from the `status`
-command. When diving into Git's documentation, I came across the "short" status
-output, and then the porcelain standards. Porcelain v2 was chosen because it
-was more detailed and robust than v1 and "short" output. This made parsing the
-status output within Orcabak significantly easier.
-
-### Abstracting Git vs Mimicking Git
-
-Initially I planned on abstracting Git to make the tool easier to use for those
-that are less familiar. This turned out to be quite challenging, and I pivoted
-to mimic Git instead. Mimicking Git's core commands allowed me to create the
-backbone of Orcabak before trying to implement more advanced features and
-deciding how things should be abstracted.
-
-### Project Complexity
-
-I underestimated how difficult it would be to create a simple Git wrapper.
-Because of this, there were a few features left out. Instead of building out the
-Git-like commands to be as feature full as Git's actual commands, I had to focus
-on prioritizing what Orcabak users would need most.
-
 ## Motivation
 
 I had installed Klipper on my old Creality Ender 3 a few years back, and I had
@@ -427,6 +401,32 @@ the aging hardware rather than poor slicer profiles. But I am glad to have taken
 this deep dive into better understanding how Git works, writing tooling with Go,
 and learning more about software architecture. And I am not finished with
 Orcabak, there are many features and improvements yet to come.
+
+## Challenges and Learnings
+
+### Git Status Parsing
+
+Parsing Git status output was by far the most difficult but crucial part of the
+project. Many Orcabak features rely on the output that comes from the `status`
+command. When diving into Git's documentation, I came across the "short" status
+output, and then the porcelain standards. Porcelain v2 was chosen because it
+was more detailed and robust than v1 and "short" output. This made parsing the
+status output within Orcabak significantly easier.
+
+### Abstracting Git vs Mimicking Git
+
+Initially I planned on abstracting Git to make the tool easier to use for those
+that are less familiar. This turned out to be quite challenging, and I pivoted
+to mimic Git instead. Mimicking Git's core commands allowed me to create the
+backbone of Orcabak before trying to implement more advanced features and
+deciding how things should be abstracted.
+
+### Project Complexity
+
+I underestimated how difficult it would be to create a simple Git wrapper.
+Because of this, there were a few features left out. Instead of building out the
+Git-like commands to be as feature full as Git's actual commands, I had to focus
+on prioritizing what Orcabak users would need most.
 
 ## Limitations
 
